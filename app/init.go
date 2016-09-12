@@ -4,9 +4,9 @@ import (
 	"log"
 	"strings"
 	"time"
-	"travelblog/app/controllers"
+	"lelv/app/controllers"
 
-	"travelblog/app/models"
+	"lelv/app/models"
 
 	"github.com/revel/revel"
 )

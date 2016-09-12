@@ -2,7 +2,7 @@ package controllers
 
 import (
 	"log"
-	m "travelblog/app/models"
+	m "lelv/app/models"
 
 	"time"
 

@@ -4,8 +4,8 @@ import (
 	"log"
 	"strings"
 	"time"
-	m "travelblog/app/models"
-	qiniu "travelblog/app/qiniu"
+	m "lelv/app/models"
+	qiniu "lelv/app/qiniu"
 
 	"github.com/revel/revel"
 )

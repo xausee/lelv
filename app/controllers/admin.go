@@ -6,8 +6,8 @@ import (
 	"strconv"
 	"strings"
 	"time"
-	m "travelblog/app/models"
-	"travelblog/app/qiniu"
+	m "lelv/app/models"
+	"lelv/app/qiniu"
 
 	"github.com/revel/revel"
 )

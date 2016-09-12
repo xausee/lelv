@@ -2,8 +2,8 @@ package app
 
 import (
 	"log"
-	"travelblog/app/controllers"
-	model "travelblog/app/models"
+	"lelv/app/controllers"
+	model "lelv/app/models"
 
 	"github.com/revel/revel"
 )
