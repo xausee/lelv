@@ -1,0 +1,60 @@
+{{set . "title" "我的首页"}} {{template "header.html" .}} {{template "navbar.html" .}}
+
+<link rel="stylesheet" href="../public/css/for-user-home.css">
+<script src="../public/js/for-user-home.js"></script>
+
+<div class="container-fluid" style="background-color:#F1F1F1">
+    <div class="row-fluid">
+        <div class="col-md-3"></div>
+        <div class="col-md-6">&nbsp;
+            <div class="media" style="background-color:#FFFFFF">
+                <br>
+                <div class="media-left media-middle">
+                    <a href="javascript:void(0)">
+                        <img class="media-object col-md-offset-2" src={{.User.Avatar}} height="120" width="120" alt="Oh...">
+                    </a>
+                    <br>
+                    <p class="text-center"><a class="col-md-offset-2" href="javascript:void(0)"}}>{{.User.NickName}}</a></p> 
+                </div>
+                <div class="media-body" id="introduction">
+                    <blockquote class="blockquote-reverse text-info">
+                        <p>
+                            <dl contenteditable="true">
+                                <dd>{{.User.Introduction}}</dd>
+                            </dl>
+                        </p> <small>摘自<cite>《{{.User.NickName}}的博客宣言》</cite></small>
+                    </blockquote>
+                </div>
+                <div class="text-center">
+                    <a id="AllBlogs" href="javascript: void(0)">博客({{.BlogsCount}})</a>&nbsp;&nbsp;
+                    <a id="Collection" href="javascript: void(0)" }}>收藏({{.CollectionCount}})</a>&nbsp;&nbsp;
+                    <a id="Watch" href="javascript: void(0)">关注({{.WatchCount}})</a>&nbsp;&nbsp;
+                    <a id="Fans" href="javascript: void(0)">粉丝({{.FansCount}})</a>&nbsp;&nbsp;
+                    <a id="Conversations" name="Conversations" href="javascript: void(0)">消息({{.ConversationCount}})</a>
+                </div>&nbsp;
+            </div>
+            <div id="content">
+                <br> {{range $index, $item := .Blogs}}
+                <div class="thumbnail" style="background-color:#FFFFFF;padding:10px 30px 15px 30px;">
+                    {{if eq $item.Cover ""}} {{else}}
+                    <a href={{url "Blog.View" $item.ID}} title={{$item.Title}}>
+                        <br><br>
+                        <img class="lazy" src={{$item.Cover}} data-src={{$item.Cover}} alt="乐旅博客" height="450" width="1000">
+                    </a>
+                    {{end}}
+                    <div class="caption">
+                        <h3>{{$item.Title}}</h3> {{if $item.BriefText}}
+                        <p>{{$item.BriefText}}...<a href={{url "Blog.View" $item.ID}}>查看全文</a></p>
+                        {{end}}
+                        <p class="text-right">
+                            <small>{{$item.CreateTimeStamp}}</small>
+                        </p>
+                    </div>
+                </div>
+                {{end}}
+            </div>
+        </div>
+    </div>
+</div>
+
+{{template "footer.html" .}}

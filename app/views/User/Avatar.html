@@ -1,0 +1,34 @@
+<!--图片检查插件源代码： http://jquery-plugins.net/cropbox-jquery-plugin-to-crop-your-avatar-->
+<!DOCTYPE html>
+<html>
+{{template "header.html" .}}
+
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Crop Box</title>
+    <link rel="stylesheet" href="../public/css/cropbox-style.css" type="text/css" />
+    <link rel="stylesheet" href="../public/css/for-user-avatar.css">
+    <script src="../public/js/for-user-avatar.js"></script>
+</head>
+
+<body style="background-color:#FFFFFF">
+    <script src="../public/js/cropbox.js"></script>
+    <div class="cropbox-container">
+        <div class="imageBox">
+            <div class="thumbBox"></div>
+            <div class="spinner" style="display: none">正在加载...</div>
+        </div>
+        <div class="cropbox-action">
+            <input type="file" id="file" style="float:left; width: 250px">
+            <input type="button" id="save" onclick="save()" value="保存" style="float: right">
+            <input type="button" id="btnCrop" value="剪裁" style="float: right">
+            <input type="button" id="btnZoomIn" value="+" style="float: right">
+            <input type="button" id="btnZoomOut" value="-" style="float: right">
+        </div>
+        <div class="cropbox-cropped">
+
+        </div>
+    </div>
+</body>
+
+</html>

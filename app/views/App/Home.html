@@ -1,0 +1,220 @@
+{{set . "title" "乐旅 | 首页"}} {{template "header.html" .}} {{template "navbar.html" .}}
+<link rel="stylesheet" href="../public/css/for-app-home.css">
+<script src="../public/js/for-app-home.js"></script>
+
+<div class="container-fluid">
+    <div class="row-fluid">
+        <div class="col-md-2">
+            <!--<div class="thumbnail">
+                <a href="http://baike.baidu.com/link?url=jfDNHVSxQSvENetJVqWMBQF9huB2cHGXzpWkAqTa0HwnkaFYuRVG56RGeqypzH2Qj7aBeQ0sLDATmLowYgj-Na" title="2011款 SLK 200 时尚型" target="_blank">
+                    <img class="lazy" src="public/img/ad/ad_left_0.jpg" data-src="public/img/ad/ad_left_0.jpg" alt="AD..."></a>
+                <div class="caption">
+                    <h5>完美享受<br> 由此触动</h5>
+                    <small>净价:￥47.62万 </small>
+                </div>
+            </div>
+            <div class="thumbnail">
+                <a href="http://cn.diytrade.com/china/pd/11106449/背包.html" title="OEM 登山背包" target="_blank">
+                    <img class="lazy" src="public/img/ad/ad_left_1.jpg" data-src="public/img/ad/ad_left_1.jpg" alt="AD..."></a>
+                <div class="caption">
+                    <h5>背包/登山包/包袋</h5>
+                    <small>¥60 / 件  </small>
+                </div>
+            </div>-->
+        </div>
+        <div class="col-md-6" id="content">
+            <div class="container-fluid">
+                <div class="row-fluid">
+                    <div class="col-md-12">
+                        <h3>博客头条</h3>
+                        <hr>
+                    </div>
+                </div>
+                <div class="row-fluid">
+                    <div class="col-md-8">
+                        <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+                            <!-- Indicators -->
+                            <ol class="carousel-indicators">
+                                <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
+                                <li data-target="#carousel-example-generic" data-slide-to="1"></li>
+                                <li data-target="#carousel-example-generic" data-slide-to="2"></li>
+                            </ol>
+
+                            <!-- Wrapper for slides -->
+                            <div class="carousel-inner" role="listbox">
+                                {{range $index, $blog := .CarouselBlog}}
+                                <div class="item {{if eq $index 1}}active{{end}}">
+                                    <a href={{url "Blog.View" $blog.ID}} title="{{$blog.Title}}" target="_blank">
+                                        <img src="{{$blog.Cover}}" alt="{{$blog.Title}}">
+                                    </a>
+                                    <div class="carousel-caption">{{$blog.Title}}</div>
+                                </div>
+                                {{end}}
+                            </div>
+
+                            <!-- Controls -->
+                            <a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
+                                <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                                <span class="sr-only">Previous</span>
+                            </a>
+                            <a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
+                                <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                                <span class="sr-only">Next</span>
+                            </a>
+                        </div>
+                        <div class="view">
+                            <dl class="dl-horizontal">
+                                <br> {{range $index, $blog := .HeadBlogs}}
+                                <dt style="text-align: left; font-weight: 500;"><a href="{{url "Blog.View" $blog.ID}}" style="color: #555555">{{$blog.Title}}</a></dt>
+                                <dd class="text-right" style="color: #555555"> <a href={{url "User.Index" $blog.AuthorID}} style="color: #555555">{{$blog.Author}}</a></dd>
+                                {{end}}
+                            </dl>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        {{range $index, $blog := .HeadFamousBlog}}
+                        <a href={{url "Blog.View" $blog.ID}} title="{{$blog.Title}}" target="_blank">
+                            <img class="lazy img-responsive" src="{{$blog.Cover}}" alt="{{$blog.Title}}">
+                        </a>
+                        <div class="caption">
+                            <h5>今日名博推荐：
+                                <a href="{{url "Blog.View" $blog.ID}}"  title="{{$blog.Title}}" target="_blank" style="color: #555555">
+                                     {{$blog.Title}}
+                                 </a>  
+                            </h5>
+                        </div>
+                        <p>{{$blog.BriefText}}</p>
+                        <p class="text-right">
+                            <a href={{url "User.Index" $blog.AuthorID}} title="{{$blog.Author}}" target="_blank" style="color: #555555">
+                                <small>{{$blog.Author}}</small>
+                            </a>
+                        </p>
+                        {{end}}
+                    </div>
+                </div>
+            </div>
+            <div class="container-fluid">
+                <div class="row-fluid">
+                    <div class="col-md-12">
+                        <h3>纯美大自然</h3>
+                        <hr>
+                    </div>
+                </div>
+                <div class="row-fluid">
+                    {{range $index, $blog := .NaturalBlogs}}
+                    <div class="col-md-3">
+                        <a href="{{url " Blog.View " $blog.ID}}" title="{{$blog.Title}}" target="_blank">
+                            <!--<img class="lazy img-responsive" src="{{$blog.Cover}}" alt="{{$blog.Title}}" width="100%" height="200">-->
+                            <img src="{{$blog.Cover}}" width="100%" height="200">
+                        </a>
+                        <div class="caption">
+                            <h5>{{$blog.Title}}</h5>
+                            <!--<a href="{{url "User.Index" $blog.AuthorID}}" title="" target="_blank">卡夫卡<small></small></a>
+                                <small>一个孤独的人</small>-->
+                        </div>
+                        <!--<p>{{$blog.BriefText}}</p>-->
+                    </div>
+                    {{end}}
+                </div>
+                <div class="row-fluid">
+                    <div class="col-md-6">
+                        <div>
+                            <h3>历史.有韵味</h3>
+                            <hr>
+                        </div>
+                        {{range $index, $blog := .HistoryBlogs}}
+                        <div class="media">
+                            <div class="media-left">
+                                <a href={{url "Blog.View" $blog.ID}} title="{{$blog.Title}}" target="_blank">
+                                    <img data-holder-rendered="true" class="media-object" data-src="holder.js/64x64" src="{{$blog.Cover}}" style="width: 64px; height: 64px;" alt="64x64">
+                                </a>
+                            </div>
+                            <div class="media-body">
+                                <h4 class="media-heading">{{$blog.Title}}</h4>{{$blog.BriefText}}
+                            </div>
+                        </div>
+                        {{end}}
+                    </div>
+                    <div class="col-md-6">
+                        <div>
+                            <h3>世界.奇异风情</h3>
+                            <hr>
+                        </div>
+                        {{range $index, $blog := .CustomsBlogs}}
+                        <div class="media">
+                            <div class="media-left">
+                                <a href={{url "Blog.View" $blog.ID}} title="{{$blog.Title}}" target="_blank">
+                                    <img data-holder-rendered="true" class="media-object" data-src="holder.js/64x64" src="{{$blog.Cover}}" style="width: 64px; height: 64px;" alt="64x64">
+                                </a>
+                            </div>
+                            <div class="media-body">
+                                <h4 class="media-heading">{{$blog.Title}}</h4>{{$blog.BriefText}}
+                            </div>
+                        </div>
+                        {{end}}
+                    </div>
+                </div>
+                <div class="row-fluid">
+                    <div class="col-md-12">
+                        <div>
+                            <h3>达人.分享</h3>
+                            <hr>
+                        </div>
+                    </div>
+                    <div class="row-fluid">
+                        {{range $index, $blog := .ShareBlogs}}
+                        <div class="col-md-3">
+                            <a href={{url "Blog.View" $blog.ID}} title="{{$blog.Title}}" target="_blank">
+                                <!--<img class="lazy img-responsive" src="{{$blog.Cover}}" alt="{{$blog.Title}}" width="100%" height="200">-->
+                                <img src="{{$blog.Cover}}" width="100%" height="200">
+                            </a>
+                            <div class="caption">
+                                <h5>{{$blog.Title}}</h5>
+                                <a href={{url "User.Index" $blog.AuthorID}} title="" target="_blank">卡夫卡<small></small></a>
+                                <small>一个孤独的人</small>
+                            </div>
+                            <p>{{$blog.BriefText}}</p>
+                        </div>
+                        {{end}}
+                    </div>
+                </div>
+                <div class="row-fluid">
+                    <div class="col-md-12">
+                        <div>
+                            <h3>及时更新</h3>
+                            <hr>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <dl class="dl-horizontal">
+                            {{range $index, $blog := .LatestBlogsLeft}}
+                            <dt style="text-align: left; font-weight: 500;"><a href={{url "Blog.View" $blog.ID}} style="color: #555555">{{$blog.Title}}</a></dt>
+                            <dd class="text-right" style="color: #555555"> <a href={{url "User.Index" $blog.AuthorID}} style="color: #555555">{{$blog.Author}}</a></dd>
+                            {{end}}
+                        </dl>
+                    </div>
+                    <div class="col-md-6">
+                        <dl class="dl-horizontal">
+                            {{range $index, $blog := .LatestBlogsRight}}
+                            <dt style="text-align: left; font-weight: 500;"><a href={{url "Blog.View" $blog.ID}} style="color: #555555">{{$blog.Title}}</a></dt>
+                            <dd class="text-right" style="color: #555555"> <a href={{url "User.Index" $blog.AuthorID}} style="color: #555555">{{$blog.Author}}</a></dd>
+                            {{end}}
+                        </dl>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2">
+            {{template "rightpanal.html" .}}
+        </div>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="span6">
+            {{template "flash.html" .}}
+        </div>
+    </div>
+</div>
+
+{{template "footer.html" .}}

@@ -1,0 +1,18 @@
+<div class="row-fluid">&nbsp;
+    <div class="col-md-12" style="background-color:#FFFFFF">
+        {{range $index, $fan := .Fans}}
+        <div class="media">
+            <div class="media-left">
+                <a href={{url "User.Index" $fan.ID}}>
+                    <img data-holder-rendered="true" class="media-object" id="Img_{{$index}}" data-src="holder.js/64x64" src="{{$fan.Avatar}}"
+                        style="width: 64px; height: 64px;" alt="64x64">
+                </a>
+            </div>
+            <div class="media-body">
+                <input style="display:none" id="FanID_{{$index}}" value="{{$fan.ID}}">
+                <h4 class="media-heading" id="Title_{{$index}}"><a href={{url "User.Index" $fan.ID}}>{{$fan.NickName}}</a></h4>{{$fan.Introduction}}
+            </div>
+        </div>
+        {{end}}
+    </div>
+</div>&nbsp;

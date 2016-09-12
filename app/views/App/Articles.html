@@ -1,0 +1,19 @@
+{{set . "title" "乐旅 | 文字"}} {{template "header.html" .}} {{template "navbar.html" .}}
+
+<div class="container-fluid">
+    <div class="row-fluid">
+        <div class="col-md-2"></div>
+        <div class="col-md-6">
+            {{range $index, $blog := .ArticlesBlogs}}
+            <div class="row-fluid">
+                <p><a href={{url "Blog.View" $blog.ID}} title="{{$blog.Title}}" target="_blank">{{$blog.Title}}</a></p>
+                <p>{{$blog.BriefText}}...&nbsp;&nbsp;<a href={{url "Blog.View" $blog.ID}} title="{{$blog.Title}}" target="_blank">阅读全文</a></p>
+            </div>
+            {{end}}
+        </div>
+    </div>
+    <div class="col-md-2">{{template "rightpanal.html" .}}</div>
+</div>
+</div>
+
+{{template "footer.html" .}}

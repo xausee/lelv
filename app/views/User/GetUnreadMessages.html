@@ -1,0 +1,15 @@
+{{$messages := descendingByDateTime .Messages}} 
+{{range $index, $message := $messages}}
+<li class="odd">
+    <a class="user" href="{{url "User.Index" $message.From.UserID}}">
+        <img class="img-responsive avatar_" src="{{$message.From.UserAvatar}}" alt="" style="width:36px">
+        <span class="user-name">{{$message.From.UserNickName}}</span>
+    </a>
+    <div class="reply-content-box">
+        <span class="reply-time">{{$message.TimeStamp}}</span>
+        <div class="reply-content pr">
+            <span class="arrow">&nbsp;</span>{{$message.Content}}
+        </div>
+    </div>
+</li>
+{{end}}

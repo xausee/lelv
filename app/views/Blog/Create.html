@@ -1,0 +1,58 @@
+{{set . "title" "撰写博客"}} {{template "header.html" .}} {{template "navbar.html" .}}
+<!-- include summernote css/js-->
+<link href="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.1/summernote.css" rel="stylesheet">
+<script src="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.1/summernote.js"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.1/lang/summernote-zh-CN.js"></script>
+<script src="../public/js/for-blog-create.js"></script>
+
+<div id="info"></div>
+<div class="container-fluid">
+    <div class="row-fluid">
+        <div class="col-md-3"></div>
+        <div class="col-md-6">
+            <input id="uptoken" value={{.UpToken}} type="hidden">
+            <input id="cdn" value={{.CDN}} type="hidden">
+            <form class="form-horizontal" role="form" id="BlogForm" action={{url "Blog.PostBlog"}} method="POST" enctype="multipart/form-data">
+                {{with $field := field "blog.Title" .}}
+                <div class="form-group {{$field.ErrorClass}}">
+                    <div class="col-sm-12">
+                        <input type="text" class="form-control" id="{{$field.Id}}" name="{{$field.Name}}" value="{{$field.Flash}}" placeholder="标题">                        {{if $field.Error}}
+                        <span class="help-inline text-danger">{{$field.Error}}</span> {{end}}
+                    </div>
+                </div>
+                {{end}}
+                <div class="form-group">
+
+                </div>
+                <div class="row">
+
+                    <div class="col-sm-4">
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="Tag">
+                            <span class="input-group-btn">
+                                <button class="btn btn-default" id="AddTag" type="button">添加标签</button>
+                             </span>
+                        </div>
+                    </div>
+                    <div class="col-sm-8" id="Tags"></div>
+                </div>
+                <br>
+                <label class="radio-inline">
+                        <input type="radio" name="BlogType" id="Picture" value="Picture" checked>图片博客
+                </label>
+                <label class="radio-inline">
+                        <input type="radio" name="BlogType" id="Text" value="Text">文字博客
+                </label>
+                <label class="radio-inline">
+                        <input type="radio" name="BlogType" id="Hybrid" value="Hybrid">混合博客
+                </label>
+
+                <div id="summernote" name="summernote"></div>
+                <button type="button" class="btn btn-success btn-right" id="Publish" style="width:100%">发布</button>
+                <br><br><br>
+            </form>
+        </div>
+    </div>
+</div>
+
+{{template "footer.html" .}}

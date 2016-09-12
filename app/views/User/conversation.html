@@ -1,0 +1,46 @@
+{{$title := strcat "私聊 | " .RemoteUserNickName}}
+{{set . "title" $title}} {{template "header.html" .}} {{template "navbar.html" .}}
+
+<link rel="stylesheet" href="../public/css/for-chat.css">
+
+<div class="container-fluid">
+    <div class="row-fluid">
+        <div class="col-md-offset-4 col-md-4">
+            <div class="panel panel-default">
+                <div class="panel-body" id="MsgPanel" style="height: 500px; overflow: scroll; overflow-x:hidden;">
+                    <div data-role="page">
+                        <div data-role="content" class="container-fluid" role="main">
+                            <input id="ConversationID" value="{{.Conversation.ID}}" style="display:none" />
+                            <ul id="Messages" class="content-reply-box mg10">
+                                {{$userId := .UserID}} {{range $index, $message := .Conversation.Messages}}
+                                <li class={{if eq $message.From.UserID $userId}} "even"{{else}} "odd"{{end}}>
+                                    <a class="user" href="{{url "User.Index" $message.From.UserID}}">
+                                        <img class="img-responsive avatar_" src="{{$message.From.UserAvatar}}" alt="" style="width:36px">
+                                        <span class="user-name">{{$message.From.UserNickName}}</span>
+                                    </a>
+                                    <div class="reply-content-box">
+                                        <span class="reply-time">{{$message.TimeStamp}}</span>
+                                        <div class="reply-content pr">
+                                            <span class="arrow">&nbsp;</span>{{$message.Content}}
+                                        </div>
+                                    </div>
+                                </li>
+                                {{end}}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-body">
+                <div class="input-group">
+                    <input type="text" class="form-control" id="MessageContent" autofocus>
+                    <span class="input-group-btn">
+                        <button id="PostMessage" class="btn btn-default" type="button">回复</button>
+                    </span>
+                </div>
+                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="../public/js/for-user-conversation.js"></script>

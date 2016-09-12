@@ -1,0 +1,64 @@
+{{set . "title" "我的资料"}} {{template "header.html" .}} {{template "navbar.html" .}}
+
+<!--弹出窗口源代码：http://www.5icool.org/a/201204/576.html 代码有改动-->
+<script type="text/javascript" src="../public/js/zDrag.js"></script>
+<script type="text/javascript" src="../public/js/zDialog.js"></script>
+<script type="text/javascript" src="../public/js/for-user-profile.js"></script>
+
+<div class="header" style="background-color:#DDDDDD; height:80px">
+    <div class="container-fluid">
+    </div>
+</div>
+
+<input id="uptoken" value={{.UpToken}} type="hidden">
+
+<div class="container-fluid" style="background-color:#DDDDDD">
+    <div class="row-fluid">
+        <div class="col-md-3"></div>
+        <div class="col-md-6">
+            <form role="form" id="ProfileForm" action={{url "User.PostProfile"}} method="POST" enctype="multipart/form-data" style="background-color:#FFFFFF">
+                <label>&nbsp;</label>
+                <div class="form-group">
+                    <label for="inputEmail3" class="col-md-2 control-label text-right">头像</label>
+                    <div class="col-md-10">
+                        <img class="media-object" id="avatar" name="avatar" src="{{.User.Avatar}}" height="120" width="120" alt="Oh..."> &nbsp;
+                    </div>
+                    <div id="feadback"></div>
+                    <!--<textarea class="form-control" id="Base64String" name="Base64String" rows="10"></textarea>-->
+                </div>
+                <div class="form-group">
+                    <label for="inputEmail3" class="col-md-2 control-label"></label>
+                    <div class="col-md-10">
+                        <button type="button" class="btn btn-default" onclick="uploadAvatar()">修改头像</button>
+                    </div>
+                </div>
+                <label>&nbsp;</label>
+                <div class="form-group">
+                    <label for="NickName" class="col-md-2 control-label text-right">账号</label>
+                    <div class="col-md-10">
+                        <!--<input type="input" class="form-control" id="NickName" name="NickName" value="{{.User.NickName}}" placeholder="修改名称">-->
+                        <p>{{.User.NickName}}</p>
+                    </div>
+                </div>
+                <label>&nbsp;</label>
+                <div class="form-group">
+                    <label for="inputEmail3" class="col-md-2 control-label text-right">简介</label>
+                    <div class="col-md-10">
+                        <textarea class="form-control" id="Introduction" name="Introduction" rows="10">{{.User.Introduction}}</textarea>
+                    </div>
+                </div>
+                <label>&nbsp;</label>
+                <div class="form-group">
+                    <label for="inputEmail3" class="col-md-2 control-label text-right"></label>
+                    <div class="col-md-10">
+                        <button type="button" class="btn btn-success" onclick="postForm()">提交修改</button>
+                    </div>
+                </div>
+                <label>&nbsp;</label>
+            </form>
+            <br><br><br><br>
+        </div>
+    </div>
+</div>
+
+{{template "footer.html" .}}

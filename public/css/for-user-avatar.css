@@ -1,0 +1,21 @@
+ .cropbox-container {
+            position: absolute;
+            top: 25px;
+            left: 25px;
+            right: 0;
+            bottom: 0;
+} 
+
+.cropbox-action {
+            width: 400px;
+            height: 30px;
+            margin: 10px 0;
+        }
+
+.cropbox-cropped>img {
+            position: absolute;
+            top: 50px;
+            right: 50px;
+            bottom: 0;
+            /*margin-right: 10px;*/
+        }

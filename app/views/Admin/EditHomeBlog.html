@@ -1,0 +1,29 @@
+{{set . "title" .Title}} {{template "header.html" .}}
+<script src="../public/js/for-admin-edithomeblog.js"></script>
+<div class="alert alert-info text-center" role="alert">{{.Title}}</div>
+<div class="container-fluid">
+    <div class="row-fluid">
+        <input style="display:none" id="BlogType" value={{.BlogType}}>
+        <div class="col-md-1"></div>
+        <div class="col-md-4">
+            <form class="form-horizontal" role="form" id="SearchForm" method="POST" enctype="multipart/form-data">
+                <div class="input-group">
+                    <input class="form-control" id="key" placeholder="搜索 埃及金字塔..." type="text">
+                    <span class="input-group-btn"><button class="btn btn-default" type="button" onclick="search()">搜索!</button></span>
+                </div>
+            </form>
+            <br>
+            <div id="search_results"></div>
+        </div>
+        <div class="col-md-4">
+            <form class="form-horizontal" role="form" id="SearchForm" method="POST" enctype="multipart/form-data">
+                <div class="input-group">
+                    <label class="form-control text-center">已 选 择 博 客</label>
+                    <span class="input-group-btn"><button class="btn btn-default" type="button" onclick="save()">提交</button></span>
+                </div>
+            </form>
+            <br>
+            <div id="ChosedBlogs"></div>
+        </div>
+    </div>
+</div>

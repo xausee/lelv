@@ -1,0 +1,22 @@
+<div class="row-fluid">&nbsp;
+    <div class="col-md-12" style="background-color:#FFFFFF">
+        {{range $index, $blog := .Blogs}}
+        <div class="media">
+            {{if $blog.Cover}}
+            <div class="media-left">
+                <a href={{url "Blog.View" $blog.ID}}>
+                    <img data-holder-rendered="true" class="media-object" id="Img_{{$index}}" data-src="holder.js/64x64" src="{{$blog.Cover}}"
+                        style="width: 64px; height: 64px;" alt="64x64">
+                </a>
+            </div>
+            {{end}}&nbsp;
+            <div class="media-body">
+                <input style="display:none" id="BlogID_{{$index}}" value="{{$blog.ID}}">
+                <h4 class="media-heading" id="Title_{{$index}}"><a href={{url "Blog.View" $blog.ID}} style="color: #555555">{{$blog.Title}}</a></h4>{{$blog.BriefText}}...
+                ...
+               <div class="text-right">评论&nbsp;{{len $blog.Comments}}&nbsp;&nbsp;&nbsp;&nbsp;作者&nbsp;<a href={{url "User.Index" $blog.AuthorID}}>{{$blog.Author}}</a></div>
+            </div>
+        </div>
+        {{end}}
+    </div>
+</div>&nbsp;

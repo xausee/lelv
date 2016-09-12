@@ -1,0 +1,36 @@
+<script src="../public/js/for-admin-edithomeblog.js"></script>
+{{range $index, $blog := .Blogs}}
+<div class="media">
+    <div class="media-left">
+        <div class="checkbox">
+            <label><input type="checkbox" name="SearchResults" id="SearchResult_{{$index}}" value="{{$blog.ID}}">  </label>
+        </div>
+    </div>
+    <div class="media-left" id="SearchResult_Cover_{{$index}}">
+        <a href="{{url "Blog.View" $blog.ID}}">
+            <img data-holder-rendered="true" class="media-object" id="Img_{{$index}}" data-src="holder.js/64x64" src="{{$blog.Cover}}"
+                style="width: 64px; height: 64px;" alt="64x64">
+        </a>
+    </div>
+    <div class="media-body" id="SearchResult_Cover_{{$index}}">
+        <input style="display:none" id="BlogID_{{$index}}" value="{{$blog.ID}}">
+        <h4 class="media-heading" id="Title_{{$index}}">{{$blog.Title}}</h4>{{$blog.BriefText}}... ...
+    </div>
+</div>
+
+<div style="display:none" id="{{$blog.ID}}">
+    <script></script>
+    <div class="media">       
+        <div class="media-left">
+            <a href="{{url "Blog.View" $blog.ID}}">
+                <img data-holder-rendered="true" class="media-object" data-src="holder.js/64x64" src="{{$blog.Cover}}" style="width: 64px; height: 64px;"
+                    alt="64x64">
+            </a>
+        </div>
+        <div class="media-body">
+            <input style="display:none" id="BlogID_Chosed_{{$index}}" value="{{$blog.ID}}">
+            <h4 class="media-heading" id="Title_{{$index}}">{{$blog.Title}}</h4>{{$blog.BriefText}}... ...
+        </div>
+    </div>
+</div>
+{{end}}

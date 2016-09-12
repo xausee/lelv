@@ -1,0 +1,119 @@
+<style>
+    .wrap {
+        width: 50px;
+        margin-bottom: 10px;
+        position: relative;
+    }
+    
+    .img {
+        width: 50px;
+        height: 50px;
+        border: 1px solid #000;
+    }
+    
+    .notice {
+        width: 20px;
+        height: 20px;
+        line-height: 20px;
+        font-size: 10px;
+        color: #fff;
+        text-align: center;
+        background-color: #f00;
+        border-radius: 50%;
+        position: absolute;
+        right: -5px;
+        top: 10px;
+    }
+</style>
+
+<!--<div class="header" style="background-image: url(public/img/1.jpg);height:150px"> 
+    <div class="container-fluid">
+        <br>
+        <br>       
+        <div class="row-fluid">
+            <div class="col-xs-12 text-center text-info">
+                <h3><a href="www.yixing.com">一 行 博 客</a> . 您 的 旅 行 专 属 博 客</h3>
+            </div>
+        </div>
+        <div class="row-fluid">
+            <div class="col-xs-4"></div>
+            <div class="col-xs-4">
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="小田园">
+                    <span class="input-group-btn"><button class="btn btn-default" type="button">搜一搜</button></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>-->
+
+<nav class="navbar navbar-default" style="background-color:#FFFFFF">
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="col-md-2">
+                <!-- Brand and toggle get grouped for better mobile display -->
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="#">
+                        <a href="#"><img src="public/img/logo.png" onerror="javascript:this.src='../public/img/logo.png'" alt="乐旅.部落阁"></a>
+                    </a>
+                </div>
+            </div>
+            <div class="col-md-8">
+                <!-- Collect the nav links, forms, and other content for toggling -->
+                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                    <ul class="nav navbar-nav">
+                        <li><a href={{url "App.Home"}}>首页<span class="sr-only">(current)</span></a></li>
+                        <li><a href={{url "App.Pictures"}}>图片博客</a></li>
+                        <li><a href={{url "App.Articles"}}>文字博客</a></li>
+                        <li><a href={{url "App.About"}}>关于我们</a></li>
+                        <!--<li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="#">Action</a></li>
+                                <li><a href="#">Another action</a></li>
+                                <li><a href="#">Something else here</a></li>
+                                <li role="separator" class="divider"></li>
+                                <li><a href="#">Separated link</a></li>
+                                <li role="separator" class="divider"></li>
+                                <li><a href="#">One more separated link</a></li>
+                            </ul>
+                        </li>-->
+                    </ul>
+                    <!--<form class="navbar-form navbar-right" role="search">
+                        <div class="form-group">
+                            <input type="text" class="form-control" placeholder="埃及金字塔">
+                        </div>
+                        <button type="submit" class="btn btn-default">搜索</button>
+                    </form>-->
+                    <ul class="nav navbar-nav navbar-right">
+                        {{if eq .NickName "Guest"}}
+                        <li><a href={{url "User.SignUp"}}>注册</a></li>
+                        <li><a href={{url "User.SignIn"}}>登陆</a></li>
+                        {{else}}
+                        <li><a id="Conversations" name="Conversations" href="javascript: void(0)">消息{{if .UnreadMsgCount}}<div class="notice">{{.UnreadMsgCount}}</div>{{end}}</a></li>
+                        <li><a href={{url "User.Home"}}>{{.NickName}}</a></li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">更多 <span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li><a href={{url "User.Home"}}>主页</a></li>
+                                <li><a href={{url "Blog.Create"}}>写博客</a></li>
+                                <li><a href={{url "User.Profile"}}>改资料</a></li>
+                                <li role="separator" class="divider"></li>
+                                <li><a href={{url "User.SignOut"}}>注销</a></li>
+                            </ul>
+                        </li>
+                        {{end}}
+                    </ul>
+                </div>
+                <!-- /.navbar-collapse -->
+            </div>
+        </div>
+    </div>
+    <!-- /.container-fluid -->
+</nav>

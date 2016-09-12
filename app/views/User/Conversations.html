@@ -1,0 +1,21 @@
+<br>
+{{$conversations := descendingByDateTime .Conversations}}
+{{range $index, $conversation := $conversations}}
+<div class="media">
+    <div class="media-left">
+        <a href="{{url "User.Index" $conversation.InitiatorID}}">
+            <img data-holder-rendered="true" class="media-object" id="Img_{{$index}}" data-src="holder.js/64x64" src="{{$conversation.InitiatorAvatar}}" style="width: 64px; height: 64px;" alt="64x64">
+        </a>
+    </div>
+    <div class="media-body">       
+        <p>{{$lastMessage := getLastObj $conversation.Messages}}</p>
+        {{$lastMessage.Content}}
+        <p class="text-right">
+            <small>{{$conversation.TimeStamp}}</small>
+        </p>
+        <p class="text-left">
+            <a href="{{url "User.Conversation" $conversation.ID}}">共{{len $conversation.Messages}}条对话</a>
+        </p>
+    </div>
+</div>
+{{end}}

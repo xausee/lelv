@@ -1,0 +1,33 @@
+{{set . "title" "管理员首页"}} {{template "header.html" .}} {{template "navbar.html" .}}
+
+<div class="container-fluid">
+    <div class="row-fluid">
+        <div class="col-md-4"></div>
+        <div class="col-md-4">
+            <ul class="list-group">
+                <li class="list-group-item list-group-item-success"><a href={{url "Admin.Carousel"}}>编辑轮播图</li>
+            <li class="list-group-item list-group-item-info"><a href="{{url "Admin.EditHomeBlog" 0 "编辑博客头条"}}">编辑博客头条</li>
+            <li class="list-group-item list-group-item-warning"><a href="{{url "Admin.EditHomeBlog" 1 "编辑今日名博推荐"}}">编辑今日名博推荐</li>
+            <li class="list-group-item list-group-item-danger"><a href="{{url "Admin.EditHomeBlog" 2 "编辑纯美大自然"}}">编辑纯美大自然</li>
+            <li class="list-group-item list-group-item-success"><a href="{{url "Admin.EditHomeBlog" 3 "编辑历史.有韵味"}}">编辑历史.有韵味</li>
+            <li class="list-group-item list-group-item-info"><a href="{{url "Admin.EditHomeBlog" 4 "编辑世界.奇异风情"}}">编辑世界.奇异风情</li>
+            <li class="list-group-item list-group-item-warning"><a href="{{url "Admin.EditHomeBlog" 5 "编辑达人.分享"}}">编辑达人.分享</li>
+            <li class="list-group-item list-group-item-danger"><a href="{{url "Admin.EditHomeBlog" 6 "编辑及时更新"}}">编辑及时更新</li>
+            <li class="list-group-item list-group-item-success"><a href="{{url "Admin.EditHomeBlog" 7 "编辑图片博客"}}">编辑图片博客</li>
+            <li class="list-group-item list-group-item-info"><a href="{{url "Admin.EditHomeBlog" 8 "编辑文字博客"}}">编辑文字博客</li>
+            
+            <!--<li class="list-group-item list-group-item-info"><a href="{{url "Admin.EditHomeBlog" 8 "编辑文字博客"}}">首页阅读排行榜博客</li>
+            <li class="list-group-item list-group-item-info"><a href="{{url "Admin.EditHomeBlog" 8 "编辑文字博客"}}">首页评论排行榜博客</li>
+            <li class="list-group-item list-group-item-info"><a href="{{url "Admin.EditHomeBlog" 8 "编辑文字博客"}}">首页点赞排行榜博客</li>
+             <li class="list-group-item list-group-item-info"><a href="{{url "Admin.EditHomeBlog" 8 "编辑文字博客"}}">首页阅读排行榜博客</li>
+            <li class="list-group-item list-group-item-info"><a href="{{url "Admin.EditHomeBlog" 8 "编辑文字博客"}}">首页评论排行榜博客</li>
+            <li class="list-group-item list-group-item-info"><a href="{{url "Admin.EditHomeBlog" 8 "编辑文字博客"}}">首页点赞排行榜博客</li>
+             <li class="list-group-item list-group-item-info"><a href="{{url "Admin.EditHomeBlog" 8 "编辑文字博客"}}">首页阅读排行榜博客</li>
+            <li class="list-group-item list-group-item-info"><a href="{{url "Admin.EditHomeBlog" 8 "编辑文字博客"}}">首页评论排行榜博客</li>
+            <li class="list-group-item list-group-item-info"><a href="{{url "Admin.EditHomeBlog" 8 "编辑文字博客"}}">首页点赞排行榜博客</li>-->
+            </ul>
+        </div>            
+    </div>
+ </div>
+
+{{template "footer.html" .}}

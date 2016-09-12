@@ -1,0 +1,65 @@
+{{$title := strcat .User.NickName " | 首页"}} {{set . "title" $title}} {{template "header.html" .}} {{template "navbar.html" .}}
+
+<link rel="stylesheet" href="../public/css/for-user-home.css">
+<script src="../public/js/for-user-index.js"></script>
+
+<div class="container-fluid" style="background-color:#F1F1F1">
+    <div class="row-fluid">
+        <div class="col-md-3"></div>
+        <div class="col-md-6">&nbsp;
+            <div class="media" style="background-color:#FFFFFF">
+                <br>
+                <div class="media-left media-middle">
+                    <a href="#">
+                        <img class="media-object col-md-offset-2" src={{.User.Avatar}} height="120" width="120" alt="Oh...">
+                    </a>
+                    <br>
+                    <p class="text-center"><a class="col-md-offset-2" href={{url "User.Index" .User.ID}}>{{.User.NickName}}</a></p>
+                </div>
+                <div class="media-body" id="introduction">
+                    <blockquote class="blockquote-reverse text-info">
+                        <p>
+                            <dl contenteditable="true">
+                                <!--<dt class="text-center text-info">{{.User.NickName}}<br><br></dt>-->
+                                <dd>{{.User.Introduction}}</dd>
+                            </dl>
+                        </p> <small>摘自<cite>《{{.User.NickName}}的博客宣言》</cite></small>
+                    </blockquote>
+                </div>
+                <div class="text-center">
+                    <input id="UserID" value="{{.User.ID}}" type="hidden">
+                    <input id="SigninedUserID" value="{{.SigninedUserID}}" type="hidden">
+                    <a id="AllBlogs" href="javascript: void(0)">博客({{.BlogsCount}})</a>&nbsp;&nbsp;
+                    <a id="Fans" href="javascript: void(0)">粉丝({{.FansCount}})</a>&nbsp;&nbsp; {{if eq .UserID .User.ID}}
+                    {{else}}
+                    <a id="Watch" href="javascript: void(0)">{{if .Watched}}取消关注{{else}}关注{{end}}</a>&nbsp;&nbsp;
+                    <a id="Message" href="javascript: void(0)">私信</a>&nbsp;&nbsp; {{end}}
+                </div>&nbsp;
+            </div>&nbsp;
+            <div id="info"></div>
+            <br>
+            <div id="content">
+                {{range $index, $item := .Blogs}}
+                <div class="thumbnail" style="background-color:#FFFFFF;padding:10px 30px 15px 30px;">
+                    {{if eq $item.Cover ""}} {{else}}
+                    <a href={{url "Blog.View" $item.ID}} title={{$item.Title}}>
+                        <br><br>
+                        <img class="lazy" src={{$item.Cover}} data-src={{$item.Cover}} alt="乐旅博客" height="450" width="1000">
+                    </a>
+                    {{end}}
+                    <div class="caption">
+                        <h3>{{$item.Title}}</h3> {{if $item.BriefText}}
+                        <p>{{$item.BriefText}}...<a href={{url "Blog.View" $item.ID}}>查看全文</a></p>
+                        {{end}}
+                        <p class="text-right">
+                            <small>{{$item.CreateTimeStamp}}</small>
+                        </p>
+                    </div>
+                </div>
+                {{end}}
+            </div>
+        </div>
+    </div>
+</div>
+
+{{template "footer.html" .}}

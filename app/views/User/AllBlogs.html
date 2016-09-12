@@ -1,0 +1,10 @@
+<div class="row-fluid">
+    <div class="col-md-12" style="background-color:#FFFFFF">
+        <dl class="dl-horizontal">
+            {{range $index, $blog := .Blogs}}
+            <dt style="text-align: left; font-weight: 500;"><a href="{{url "Blog.View" $blog.ID}}" style="color: #555555">{{$blog.Title}}</a></dt>
+            <dd class="text-right" style="color: #555555">{{$blog.CreateTimeStamp}}</dd>
+            {{end}}
+        </dl>
+    </div>
+</div>&nbsp;

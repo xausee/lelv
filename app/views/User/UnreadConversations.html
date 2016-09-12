@@ -1,0 +1,24 @@
+<br>
+
+{{range $index, $item := .Conversations}}
+<div class="media">
+    <div class="media-left">
+        <a href="{{url "User.Index" $item.Conversation.InitiatorID}}">
+            <img data-holder-rendered="true" class="media-object" id="Img_{{$index}}" data-src="holder.js/64x64" src="{{$item.Conversation.InitiatorAvatar}}" style="width: 64px; height: 64px;" alt="64x64">
+        </a>
+        <p class="text-left">
+            <a href="{{url "User.Conversation" $item.Conversation.ID}}">共{{$item.UnreadMessageCount}}条未读消息</a>
+        </p>
+    </div>
+    <div class="media-body">       
+        <p>{{$lastMessage := getLastObj $item.Conversation.Messages}}</p>
+        {{$lastMessage.Content}}
+        <p class="text-right">
+            <small>{{$item.Conversation.TimeStamp}}</small>
+        </p>
+        <p class="text-left">
+            <a href="{{url "User.Conversation" $item.Conversation.ID}}">共{{len $item.Conversation.Messages}}条对话</a>
+        </p>
+    </div>
+</div>
+{{end}}

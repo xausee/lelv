@@ -1,0 +1,77 @@
+{{set . "title" "注册"}} {{template "header.html" .}} {{template "navbar.html" .}}
+<div class="header" style="height:80px">
+    <div class="container-fluid">
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="row-fluid">
+        <div class="col-md-4"></div>
+        <div class="col-md-4">
+            <h4><strong>创建帐户</strong></h4>
+            <hr>
+            <form class="form-horizontal" role="form" action="{{url "User.PostSignUp"}}" method="POST">
+                <!--{{with $field := field "mockuser.Email" .}}
+                <div class="form-group {{$field.ErrorClass}}">
+                    <label class="col-sm-2 control-label" for="{{$field.Id}}">电子邮件</label>
+                    <div class="col-sm-10">
+                        <input type="email" class="form-control" id="{{$field.Id}}" name="{{$field.Name}}" value="{{$field.Flash}}" placeholder="电子邮件"
+                        required> {{if $field.Error}}
+                        <span class="help-inline">{{$field.Error}}</span> {{end}}
+                    </div>
+                </div>
+                {{end}}-->
+                {{with $field := field "mockuser.NickName" .}}
+                <div class="form-group {{$field.ErrorClass}}">
+                    <label class="col-sm-2 control-label" for="{{$field.Id}}">昵称</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="{{$field.Id}}" name="{{$field.Name}}" value="{{$field.Flash}}" placeholder="昵称"> {{if $field.Error}}
+                        <span class="help-inline text-danger">{{$field.Error}}</span> {{end}}
+                    </div>
+                </div>
+                {{end}} {{with $field := field "mockuser.Password" .}}
+                <div class="form-group {{$field.ErrorClass}}">
+                    <label class="col-sm-2 control-label" for="{{$field.Id}}">密码</label>
+                    <div class="col-sm-10">
+                        <input type="password" class="form-control" id="{{$field.Id}}" name="{{$field.Name}}" value="{{$field.Flash}}" placeholder="密码"> {{if $field.Error}}
+                        <span class="help-inline text-danger">{{$field.Error}}</span> {{end}}
+                    </div>
+                </div>
+                {{end}} {{with $field := field "mockuser.ConfirmPassword" .}}
+                <div class="form-group {{$field.ErrorClass}}">
+                    <label class="col-sm-2 control-label" for="{{$field.Id}}">确认密码</label>
+                    <div class="col-sm-10">
+                        <input type="password" class="form-control" id="{{$field.Id}}" name="{{$field.Name}}" value="{{$field.Flash}}" placeholder="确认密码"> {{if $field.Error}}
+                        <span class="help-inline text-danger">{{$field.Error}}</span> {{end}}
+                    </div>
+                </div>
+                {{end}}
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">性别</label>
+                    <div class="col-sm-10">
+                        <label class="radio-inline">
+                            <input type="radio" name="mockuser.Gender" value="男" checked> 男
+                        </label>
+                        <label class="radio-inline">
+                            <input type="radio" name="mockuser.Gender" value="女"> 女
+                        </label>
+                        <label class="radio-inline">
+                            <button type="submit" class="btn btn-success" id="button_Register_Form_Submit">注册</button>
+                        </label>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<!--<div class="container">
+    <div class="row">
+        <div class="span6">
+            {{template "flash.html" .}}
+        </div>
+    </div>
+</div>-->
+
+{{template "footer.html" .}}

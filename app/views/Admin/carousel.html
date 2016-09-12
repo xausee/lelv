@@ -1,0 +1,56 @@
+<!--图片检查插件源代码： http://jquery-plugins.net/cropbox-jquery-plugin-to-crop-your-avatar-->
+<!DOCTYPE html>
+<html>
+{{set . "title" "轮播图编辑"}} {{template "header.html" .}}
+
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>轮播图编辑</title>
+    <link rel="stylesheet" href="../public/css/for-carousel-edit.css" type="text/css" />
+    <script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
+    <script src="../public/js/for-carousel-edit.js"></script>
+    <script src="../public/js/cropbox.js"></script>
+</head>
+
+<body style="background-color:#FFFFFF">
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="cropbox-container">
+                <div class="imageBox" id="imageBox">
+                    <div class="thumbBox"></div>
+                    <div class="spinner" style="display: none">正在加载...</div>
+                </div>
+                <div class="cropbox-action">
+                    <input type="file" id="file" style="float:left; width: 250px">
+                    <!--<input type="button" id="select" value="确定选择的博客" style="float: left">-->
+                    <input type="button" id="save" onclick="save()" value="保存" style="float: right">
+                    <input type="button" id="btnCrop" value="剪裁" style="float: right">
+                    <input type="button" id="btnZoomIn" value="+" style="float: right">
+                    <input type="button" id="btnZoomOut" value="-" style="float: right">
+                </div>
+
+                <div class="cropbox-cropped">
+
+                </div>
+            </div>
+        </div>
+        <div class="container-fluid">
+            <div class="row-fluid">
+                <div class="col-md-8"></div>
+                <div class="col-md-4">
+                    <br>
+                    <form class="form-horizontal" role="form" id="SearchForm" method="POST" enctype="multipart/form-data">
+                        <div class="input-group">
+                            <input class="form-control" id="key" placeholder="搜索 埃及金字塔..." type="text">
+                            <span class="input-group-btn"><button class="btn btn-default" type="button" onclick="search()">搜索!</button></span>
+                        </div>
+                    </form>
+                    <br>
+                    <div id="search_results"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
