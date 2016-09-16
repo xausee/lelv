@@ -7,6 +7,7 @@ function PostBlog() {
     data = new FormData();
     data.append("title", $('#blog_Title').val());
     data.append("tags", $("#tags").val());
+    data.append("pictures", $("#pictures").val());
     data.append("type", $('input:radio:checked').val());
     data.append("cover", coverPic);
     // 最多截取50个字符
@@ -53,7 +54,14 @@ function UploadToQiNiu(file) {
     var fileExtension = fileName.split('.').pop().toLowerCase();
     var uuid = UUID.prototype.createUUID();
     var nFileName = uuid + "." + fileExtension;
-    console.log("文件名：" + nFileName);
+    var picNames;
+    if ($("#pictures").val() == "") {
+        picNames = nFileName;
+    } else {
+        picNames = $("#pictures").val() + "," + nFileName;
+    }
+    $("#pictures").val(picNames);
+    console.log("文件名：" + picNames);
 
     data = new FormData();
     data.append("file", file);

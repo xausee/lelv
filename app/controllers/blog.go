@@ -46,6 +46,7 @@ func (c Blog) PostBlog(blog m.Blog) revel.Result {
 
 	}
 	tags := strings.Split(c.Request.Form["tags"][0], ",")
+	pictures := strings.Split(c.Request.Form["pictures"][0], ",")
 	blog = m.Blog{
 		ID:                  m.CreateObjectID(),
 		AuthorID:            c.Session["UserID"],
@@ -56,6 +57,7 @@ func (c Blog) PostBlog(blog m.Blog) revel.Result {
 		Cover:               c.Request.Form["cover"][0],
 		BriefText:           c.Request.Form["briefText"][0],
 		Content:             c.Request.Form["content"][0],
+		Pictures:            pictures,
 		CreateTimeStamp:     time.Now().Format("2006-01-02 15:04:05"),
 		LastUpdateTimeStamp: time.Now().Format("2006-01-02 15:04:05")}
 

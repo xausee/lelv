@@ -37,6 +37,7 @@ type Blog struct {
 	Cover               string    // 博客封面图片地址
 	BriefText           string    // 截取的文本内容
 	Content             string    // 内容
+	Pictures            []string  //博客中包含的所有图片名称集合
 	ViewCount           int       // 阅读次数
 	PraiseCount         int       // 点赞次数
 	Comments            []Comment // 评论集合
