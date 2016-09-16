@@ -1,8 +1,11 @@
 {{set . "title" "撰写博客"}} {{template "header.html" .}} {{template "navbar.html" .}}
 <!-- include summernote css/js-->
 <link href="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.1/summernote.css" rel="stylesheet">
+<link rel="stylesheet" href="../public/tagsinput/bootstrap-tagsinput.css">
+
 <script src="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.1/summernote.js"></script>
 <script src="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.1/lang/summernote-zh-CN.js"></script>
+<script src="../public/tagsinput/bootstrap-tagsinput.min.js"></script>
 <script src="../public/js/uuid.js"></script>
 <script src="../public/js/for-blog-create.js"></script>
 
@@ -17,27 +20,15 @@
                 {{with $field := field "blog.Title" .}}
                 <div class="form-group {{$field.ErrorClass}}">
                     <div class="col-sm-12">
-                        <input type="text" class="form-control" id="{{$field.Id}}" name="{{$field.Name}}" value="{{$field.Flash}}" placeholder="标题">                        {{if $field.Error}}
-                        <span class="help-inline text-danger">{{$field.Error}}</span> {{end}}
+                        <input type="text" class="form-control" id="{{$field.Id}}" name="{{$field.Name}}" value="{{$field.Flash}}" placeholder="标题">
+                        {{if $field.Error}}
+                        <span class="help-inline text-danger">{{$field.Error}}</span> 
+                        {{end}}
                     </div>
                 </div>
-                {{end}}
-                <div class="form-group">
-
-                </div>
-                <div class="row">
-
-                    <div class="col-sm-4">
-                        <div class="input-group">
-                            <input type="text" class="form-control" id="Tag">
-                            <span class="input-group-btn">
-                                <button class="btn btn-default" id="AddTag" type="button">添加标签</button>
-                             </span>
-                        </div>
-                    </div>
-                    <div class="col-sm-8" id="Tags"></div>
-                </div>
-                <br>
+                {{end}} 添加标签：
+                <input type="text" id="tags" value="Amsterdam,Washington,Sydney,Beijing,Cairo" data-role="tagsinput" />
+                <br><br>
                 <label class="radio-inline">
                         <input type="radio" name="BlogType" id="Picture" value="Picture" checked>图片博客
                 </label>

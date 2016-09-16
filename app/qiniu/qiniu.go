@@ -25,9 +25,14 @@ const (
 
 const (
 	// DefaultMaleAvatar 缺省男生头像
-	DefaultMaleAvatar = CDN + "male_0.jpg"
+	// 头像一：C739A207DA400001202E31701BD8165B.jpg
+	// 头像二：C739A20A5CD00001F374E6A516521FF3.jpg
+	// 头像三：C739A20BAD500001C7C41FA88CFA131C.jpg
+	DefaultMaleAvatar = CDN + "C739A207DA400001202E31701BD8165B.jpg"
 	// DefaultFemaleAvatar 缺省女生头像
-	DefaultFemaleAvatar = CDN + "female_0.jpg"
+	// 头像一：C739A201DFB00001DEAB10902BA01A29.jpg
+	// 头像二：C739A20484A0000194BAB3F010601D82.jpg
+	DefaultFemaleAvatar = CDN + "C739A201DFB00001DEAB10902BA01A29.jpg"
 )
 
 // CreatUpToken 创建上传凭证

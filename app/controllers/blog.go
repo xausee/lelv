@@ -45,7 +45,7 @@ func (c Blog) PostBlog(blog m.Blog) revel.Result {
 		t = m.Hybrid
 
 	}
-	tags := strings.Split(c.Request.Form["tags"][0], " ")
+	tags := strings.Split(c.Request.Form["tags"][0], ",")
 	blog = m.Blog{
 		ID:                  m.CreateObjectID(),
 		AuthorID:            c.Session["UserID"],

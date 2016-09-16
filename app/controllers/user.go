@@ -1,12 +1,13 @@
 package controllers
 
 import (
+	m "lelv/app/models"
+	qiniu "lelv/app/qiniu"
+	qiniumock "lelv/app/qiniumock"
 	"log"
 	"os"
 	"strings"
 	"time"
-	m "lelv/app/models"
-	qiniu "lelv/app/qiniu"
 
 	"github.com/revel/revel"
 	"golang.org/x/crypto/bcrypt"
@@ -217,10 +218,19 @@ func (c User) PostSignUp(mockuser m.MockUser) revel.Result {
 	}
 
 	var avatar string
-	if mockuser.Gender == "男" {
-		avatar = qiniu.DefaultMaleAvatar
+
+	if revel.RunMode == "dev" {
+		if mockuser.Gender == "男" {
+			avatar = qiniumock.DefaultMaleAvatar
+		} else {
+			avatar = qiniumock.DefaultFemaleAvatar
+		}
 	} else {
-		avatar = qiniu.DefaultFemaleAvatar
+		if mockuser.Gender == "男" {
+			avatar = qiniu.DefaultMaleAvatar
+		} else {
+			avatar = qiniu.DefaultFemaleAvatar
+		}
 	}
 
 	p, _ := bcrypt.GenerateFromPassword([]byte(mockuser.Password), bcrypt.DefaultCost)

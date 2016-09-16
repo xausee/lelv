@@ -6,13 +6,7 @@ function PostBlog() {
     content = $('#summernote').summernote('code')
     data = new FormData();
     data.append("title", $('#blog_Title').val());
-
-    var tags = "";
-    var anchors = document.getElementsByName("Tags");
-    for (i = 0; i < anchors.length; i++) {
-        tags += anchors[i].innerText.trim() + " ";
-    }
-    data.append("tags", tags.trim());
+    data.append("tags", $("#tags").val());
     data.append("type", $('input:radio:checked').val());
     data.append("cover", coverPic);
     // 最多截取50个字符
@@ -166,10 +160,6 @@ $(document).ready(function () {
     $("#Publish").click(function () {
         PostBlog();
     });
-
-    $("#AddTag").click(function () {
-        AddTag();
-    });
 });
 
 function InitSummernote() {
@@ -191,13 +181,4 @@ function InitSummernote() {
 
 function DestroySummernote() {
     $('#summernote').summernote('destroy');
-}
-
-function AddTag() {
-    var tag = $("#Tag");
-    var tags = $("#Tags");
-
-    var html = tags.html();
-    html += '<span class="label label-default" name="Tags">' + tag.val() + '</span>&nbsp;\n';
-    tags.html(html);
 }
