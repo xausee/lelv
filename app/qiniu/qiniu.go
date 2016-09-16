@@ -96,7 +96,7 @@ func Delete(key string) {
 	res := p.Delete(nil, key)
 	//打印返回值以及出错信息
 	if res == nil {
-		log.Println("Delete success")
+		log.Println("成功删除文件：" + SPACE + key)
 	} else {
 		log.Println(res)
 	}

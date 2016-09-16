@@ -2,13 +2,14 @@
 var coverPic = ""
 var setCover
 // 提交form表单
-function post_blog() {
+function PostBlog() {
     content = $('#summernote').summernote('code')
     data = new FormData();
-    
+
     data.append("id", $('#BlogID').val());
     data.append("title", $('#BlogTitle').val());
-    data.append("tags", $('#TagsInput').val());
+    data.append("tags", $("#tags").val());
+    data.append("pictures", $("#pictures").val());
     data.append("type", $('input:radio:checked').val());
     data.append("cover", coverPic);
     // 最多截取50个字符
@@ -41,21 +42,32 @@ function post_blog() {
 function UploadToQiNiu(file) {
     var info = '<button data-original-title="正在上传" title="正在上传" type="button" class="note-btn btn btn-default btn-sm info"> <img src="../public/img/loading-sm.gif" height="12px"></button>'
     $(".note-btn-group.btn-group.note-insert").append(info);
-    var filename = false;
+    var fileName = false;
     try {
-        filename = file['name'];
+        fileName = file['name'];
     } catch (e) {
-        filename = false;
+        fileName = false;
     }
-    if (!filename) {
+    if (!fileName) {
         $(".note-alarm").remove();
     }
     //以上防止在图片在编辑器内拖拽引发第二次上传导致的提示错误
-    var timestamp = new Date().getTime();
-    var name = timestamp + "_" + filename;
+
+    var fileExtension = fileName.split('.').pop().toLowerCase();
+    var uuid = UUID.prototype.createUUID();
+    var nFileName = uuid + "." + fileExtension;
+    var picNames;
+    if ($("#pictures").val() == "") {
+        picNames = nFileName;
+    } else {
+        picNames = $("#pictures").val() + "," + nFileName;
+    }
+    $("#pictures").val(picNames);
+    console.log("文件名：" + picNames);
+
     data = new FormData();
     data.append("file", file);
-    data.append("key", name);
+    data.append("key", nFileName);
     // 七牛token
     data.append("token", $("#uptoken").val());
     $.ajax({
@@ -68,8 +80,8 @@ function UploadToQiNiu(file) {
         success: function (data) {
             $(".note-btn.btn.btn-default.btn-sm.info").remove();
             //data是返回的hash,key之类的值，key是定义的文件名
-            //http://7xsp9p.com1.z0.glb.clouddn.com/: 七牛云domain
-            var url = "http://7xsp9p.com1.z0.glb.clouddn.com/" + data["key"];
+            //http://file.lelvboke.com/: 绑定到七牛云的CDN加速域名
+            var url = $("#cdn").val() + data["key"];
             if (!setCover) {
                 coverPic = url;
                 setCover = true;
@@ -152,7 +164,7 @@ function RecoverContent() {
 
 var toolbar = pictureBlogToolbar;
 $(document).ready(function () {
-    var type = $('#TagsInput').val();
+    var type = $('input:radio:checked').val();
     switch (type) {
         case "Picture":
             toolbar = pictureBlogToolbar;
@@ -188,7 +200,7 @@ $(document).ready(function () {
     });
 
     $("#Publish").click(function () {
-        post_blog();
+        PostBlog();
     });
 });
 
@@ -211,56 +223,4 @@ function InitSummernote() {
 
 function DestroySummernote() {
     $('#summernote').summernote('destroy');
-}
-
-function OnTagLabelsClick() {
-    var labels = document.getElementById("TagLabels")
-    labels.style.display = "none"
-
-    var tags = document.getElementsByName("Tags")
-    var tstr = "";
-    for (i = 0; i < tags.length; i++) {
-        tstr += tags[i].innerText + " ";
-    }
-    console.log(tstr)
-
-    var input = document.getElementById("TagsInput")
-    input.value = tstr;
-    input.style.display = "block"
-}
-
-function OnTagInputMouseMoveOut() {
-    var input = document.getElementById("TagsInput")
-    input.style.display = "none"
-
-    var tags = input.value.split(" ");
-    html = "标签：&nbsp;&nbsp;";
-    for (i = 0; i < tags.length; i++) {
-        color = "default";
-        switch (i % 6) {
-            case 0:
-                color = "default";
-                break;
-            case 1:
-                color = "primary";
-                break;
-            case 2:
-                color = "success";
-                break;
-            case 3:
-                color = "info";
-                break;
-            case 4:
-                color = "warning";
-                break;
-            case 5:
-                color = "danger";
-                break;
-        }
-        if (tags[i] != "")
-            html += '<span class="label label-' + color + '" name="Tags">' + tags[i] + '</span>\n';
-    }
-    var labels = document.getElementById("TagLabels")
-    labels.innerHTML = html;
-    labels.style.display = "block"
 }

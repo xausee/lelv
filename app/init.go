@@ -42,6 +42,10 @@ func init() {
 		return s1 + s2
 	}
 
+	revel.TemplateFuncs["join"] = func(a []string, s string) string {		
+		return strings.Join(a, s)
+	}
+
 	revel.TemplateFuncs["descendingCommentByID"] = func(data []models.Comment) []models.Comment {
 		for i := 0; i < len(data); i++ {
 			for j := 0; j < len(data)-i-1; j++ {

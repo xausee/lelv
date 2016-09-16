@@ -5,6 +5,7 @@ var setCover
 function PostBlog() {
     content = $('#summernote').summernote('code')
     data = new FormData();
+
     data.append("title", $('#blog_Title').val());
     data.append("tags", $("#tags").val());
     data.append("pictures", $("#pictures").val());

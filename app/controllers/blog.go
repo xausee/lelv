@@ -126,10 +126,18 @@ func (c Blog) Edit(id string) revel.Result {
 		log.Println("获取博客失败， ID：" + id)
 	}
 
-	token := qiniu.CreatUpToken()
-	log.Println("生成七牛上传凭证：" + token)
+	if revel.RunMode == "dev" {
+		token := qiniumock.CreatUpToken()
+		log.Println("生成七牛上传凭证：" + token)
+		c.RenderArgs["UpToken"] = token
+		c.RenderArgs["CDN"] = qiniumock.SPACE
+	} else {
+		token := qiniu.CreatUpToken()
+		log.Println("生成七牛上传凭证：" + token)
+		c.RenderArgs["UpToken"] = token
+		c.RenderArgs["CDN"] = qiniu.CDN
+	}
 
-	c.RenderArgs["UpToken"] = token
 	c.RenderArgs["Blog"] = blog
 	return c.Render()
 }
@@ -155,7 +163,8 @@ func (c Blog) PostEdit() revel.Result {
 		t = m.Hybrid
 	}
 
-	tags := strings.Split(c.Request.Form["tags"][0], " ")
+	tags := strings.Split(c.Request.Form["tags"][0], ",")
+	pictures := strings.Split(c.Request.Form["pictures"][0], ",")
 	editedblog := OldBlog
 	editedblog.Tags = tags
 	editedblog.Type = t
@@ -163,6 +172,7 @@ func (c Blog) PostEdit() revel.Result {
 	editedblog.Cover = c.Request.Form["cover"][0]
 	editedblog.BriefText = c.Request.Form["briefText"][0]
 	editedblog.Content = c.Request.Form["content"][0]
+	editedblog.Pictures = pictures
 	editedblog.LastUpdateTimeStamp = time.Now().Format("2006-01-02 15:04:05")
 
 	err = b.Update(OldBlog, editedblog)
