@@ -45,21 +45,25 @@ function PostBlog() {
 function UploadToQiNiu(file) {
     var info = '<button data-original-title="正在上传" title="正在上传" type="button" class="note-btn btn btn-default btn-sm info"> <img src="../public/img/loading-sm.gif" height="12px"></button>'
     $(".note-btn-group.btn-group.note-insert").append(info);
-    var filename = false;
+    var fileName = false;
     try {
-        filename = file['name'];
+        fileName = file['name'];
     } catch (e) {
-        filename = false;
+        fileName = false;
     }
-    if (!filename) {
+    if (!fileName) {
         $(".note-alarm").remove();
     }
     //以上防止在图片在编辑器内拖拽引发第二次上传导致的提示错误
-    var timestamp = new Date().getTime();
-    var name = timestamp + "_" + filename;
+
+    var fileExtension = fileName.split('.').pop().toLowerCase();
+    var uuid = UUID.prototype.createUUID();
+    var nFileName = uuid + "." + fileExtension;
+    console.log("文件名：" + nFileName);
+
     data = new FormData();
     data.append("file", file);
-    data.append("key", name);
+    data.append("key", nFileName);
     // 七牛token
     data.append("token", $("#uptoken").val());
     $.ajax({

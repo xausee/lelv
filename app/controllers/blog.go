@@ -1,11 +1,12 @@
 package controllers
 
 import (
+	m "lelv/app/models"
+	qiniu "lelv/app/qiniu"
+	qiniumock "lelv/app/qiniumock"
 	"log"
 	"strings"
 	"time"
-	m "lelv/app/models"
-	qiniu "lelv/app/qiniu"
 
 	"github.com/revel/revel"
 )
@@ -17,11 +18,17 @@ type Blog struct {
 
 // Create 写博客页面
 func (c Blog) Create() revel.Result {
-	token := qiniu.CreatUpToken()
-
-	log.Println("生成七牛上传凭证：" + token)
-	c.RenderArgs["UpToken"] = token
-	c.RenderArgs["CDN"] = qiniu.CDN
+	if revel.RunMode == "dev" {
+		token := qiniumock.CreatUpToken()
+		log.Println("生成七牛上传凭证：" + token)
+		c.RenderArgs["UpToken"] = token
+		c.RenderArgs["CDN"] = qiniumock.SPACE
+	} else {
+		token := qiniu.CreatUpToken()
+		log.Println("生成七牛上传凭证：" + token)
+		c.RenderArgs["UpToken"] = token
+		c.RenderArgs["CDN"] = qiniu.CDN
+	}
 
 	return c.Render()
 }
