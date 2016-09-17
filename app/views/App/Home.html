@@ -103,7 +103,7 @@
                 <div class="row-fluid">
                     {{range $index, $blog := .NaturalBlogs}}
                     <div class="col-md-3">
-                        <a href="{{url " Blog.View " $blog.ID}}" title="{{$blog.Title}}" target="_blank">
+                        <a href={{url "Blog.View" $blog.ID}} title="{{$blog.Title}}" target="_blank">
                             <!--<img class="lazy img-responsive" src="{{$blog.Cover}}" alt="{{$blog.Title}}" width="100%" height="200">-->
                             <img src="{{$blog.Cover}}" width="100%" height="200">
                         </a>

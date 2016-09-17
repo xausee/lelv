@@ -1,13 +1,24 @@
 package controllers
 
 import (
-	"log"
 	m "lelv/app/models"
-
+	"log"
 	"time"
 
 	"github.com/revel/revel"
 )
+
+func getBlogs(ids []string, c chan int, r *[]m.Blog) {
+	blog := m.Blog{}
+	for _, id := range ids {
+		b, err := blog.FindByID(id)
+		if err != nil {
+			log.Println(err)
+		}
+		*r = append(*r, b)
+	}
+	c <- 1
+}
 
 // App app控制器
 type App struct {
@@ -46,54 +57,20 @@ func (c App) Home() revel.Result {
 		log.Println(err)
 	}
 
+	const N = 6
+	ch := make(chan int, N)
+	go getBlogs(blogIds.HeadBlogs, ch, &HeadBlogs)
+	go getBlogs(blogIds.HeadFamousBlog, ch, &HeadFamousBlog)
+	go getBlogs(blogIds.NaturalBlogs, ch, &NaturalBlogs)
+	go getBlogs(blogIds.HistoryBlogs, ch, &HistoryBlogs)
+	go getBlogs(blogIds.CustomsBlogs, ch, &CustomsBlogs)
+	go getBlogs(blogIds.ShareBlogs, ch, &ShareBlogs)
+
+	for i := 0; i < N; i++ {
+		<-ch
+	}
+
 	blog := m.Blog{}
-	for _, id := range blogIds.HeadBlogs {
-		b, err := blog.FindByID(id)
-		if err != nil {
-			log.Println(err)
-		}
-		HeadBlogs = append(HeadBlogs, b)
-	}
-
-	for _, id := range blogIds.HeadFamousBlog {
-		b, err := blog.FindByID(id)
-		if err != nil {
-			log.Println(err)
-		}
-		HeadFamousBlog = append(HeadFamousBlog, b)
-	}
-
-	for _, id := range blogIds.NaturalBlogs {
-		b, err := blog.FindByID(id)
-		if err != nil {
-			log.Println(err)
-		}
-		NaturalBlogs = append(NaturalBlogs, b)
-	}
-
-	for _, id := range blogIds.HistoryBlogs {
-		b, err := blog.FindByID(id)
-		if err != nil {
-			log.Println(err)
-		}
-		HistoryBlogs = append(HistoryBlogs, b)
-	}
-
-	for _, id := range blogIds.CustomsBlogs {
-		b, err := blog.FindByID(id)
-		if err != nil {
-			log.Println(err)
-		}
-		CustomsBlogs = append(CustomsBlogs, b)
-	}
-
-	for _, id := range blogIds.ShareBlogs {
-		b, err := blog.FindByID(id)
-		if err != nil {
-			log.Println(err)
-		}
-		ShareBlogs = append(ShareBlogs, b)
-	}
 
 	n := 20
 	LatestBlogs, err = blog.FindLast(n)
