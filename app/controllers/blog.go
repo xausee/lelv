@@ -169,11 +169,15 @@ func (c Blog) PostEdit() revel.Result {
 	editedblog.Tags = tags
 	editedblog.Type = t
 	editedblog.Title = c.Request.Form["title"][0]
-	editedblog.Cover = c.Request.Form["cover"][0]
 	editedblog.BriefText = c.Request.Form["briefText"][0]
 	editedblog.Content = c.Request.Form["content"][0]
 	editedblog.Pictures = pictures
 	editedblog.LastUpdateTimeStamp = time.Now().Format("2006-01-02 15:04:05")
+	if c.Request.Form["cover"][0] != "" {
+		editedblog.Cover = c.Request.Form["cover"][0]
+	} else {
+		editedblog.Cover = OldBlog.Cover
+	}
 
 	err = b.Update(OldBlog, editedblog)
 	if err != nil {
