@@ -21,7 +21,7 @@
                         <p>
                             <dl contenteditable="true">
                                 <!--<dt class="text-center text-info">{{.User.NickName}}<br><br></dt>-->
-                                <dd>{{.User.Introduction}}</dd>
+                                <dd>{{nl2br .User.Introduction}}</dd>
                             </dl>
                         </p> <small>摘自<cite>《{{.User.NickName}}的博客宣言》</cite></small>
                     </blockquote>
@@ -30,8 +30,7 @@
                     <input id="UserID" value="{{.User.ID}}" type="hidden">
                     <input id="SigninedUserID" value="{{.SigninedUserID}}" type="hidden">
                     <a id="AllBlogs" href="javascript: void(0)">博客({{.BlogsCount}})</a>&nbsp;&nbsp;
-                    <a id="Fans" href="javascript: void(0)">粉丝({{.FansCount}})</a>&nbsp;&nbsp; {{if eq .UserID .User.ID}}
-                    {{else}}
+                    <a id="Fans" href="javascript: void(0)">粉丝({{.FansCount}})</a>&nbsp;&nbsp; {{if eq .UserID .User.ID}} {{else}}
                     <a id="Watch" href="javascript: void(0)">{{if .Watched}}取消关注{{else}}关注{{end}}</a>&nbsp;&nbsp;
                     <a id="Message" href="javascript: void(0)">私信</a>&nbsp;&nbsp; {{end}}
                 </div>&nbsp;

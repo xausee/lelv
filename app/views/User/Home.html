@@ -14,15 +14,21 @@
                         <img class="media-object col-md-offset-2" src={{.User.Avatar}} height="120" width="120" alt="Oh...">
                     </a>
                     <br>
-                    <p class="text-center"><a class="col-md-offset-2" href="javascript:void(0)"}}>{{.User.NickName}}</a></p> 
+                    <p class="text-center"><a class="col-md-offset-2" href="javascript:void(0)" }}>{{.User.NickName}}</a></p>
                 </div>
+                <!--<div class="media-left media-middle" style="visibility:hidden">
+                    <a href="javascript:void(0)">
+                        <img class="media-object col-md-offset-2" src={{.User.Avatar}} height="120" width="50" alt="Oh... ">
+                    </a>
+                </div>-->
                 <div class="media-body" id="introduction">
                     <blockquote class="blockquote-reverse text-info">
                         <p>
-                            <dl contenteditable="true">
-                                <dd>{{.User.Introduction}}</dd>
+                            <dl contenteditable="false">
+                                <dd>{{nl2br .User.Introduction}}</dd>
                             </dl>
-                        </p> <small>摘自<cite>《{{.User.NickName}}的博客宣言》</cite></small>
+                        </p>
+                        <small>摘自<cite>《{{.User.NickName}}的博客宣言》</cite></small>
                     </blockquote>
                 </div>
                 <div class="text-center">

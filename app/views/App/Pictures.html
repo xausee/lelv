@@ -16,7 +16,7 @@
                 <div class="media-body">
                     <h4 class="media-heading" id="Title_{{$index}}"><a href={{url "Blog.View" $blog.ID}} style="color: #555555">{{$blog.Title}}</a></h4>
                     <p><a href={{url "User.Index" $blog.AuthorID}}>{{$blog.Author}}</a></p>
-                    <p>{{$blog.BriefText}}... ...</p>
+                    <p>{{$blog.BriefText}}...</p>
                 </div>
                 <p class="text-right">阅读({{$blog.ViewCount}})&nbsp;&nbsp;评论({{len $blog.Comments}})</p>
                 <hr>

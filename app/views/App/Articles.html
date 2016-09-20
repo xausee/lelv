@@ -6,7 +6,7 @@
         <div class="col-md-6">
             {{range $index, $blog := .ArticlesBlogs}}
             <div class="row-fluid">
-                <p><a href={{url "Blog.View" $blog.ID}} title="{{$blog.Title}}" target="_blank">{{$blog.Title}}</a></p>
+                <h3><a href={{url "Blog.View" $blog.ID}} title="{{$blog.Title}}" target="_blank">{{$blog.Title}}</a></h3>
                 <p>{{$blog.BriefText}}...&nbsp;&nbsp;<a href={{url "Blog.View" $blog.ID}} title="{{$blog.Title}}" target="_blank">阅读全文</a></p>
             </div>
             {{end}}
