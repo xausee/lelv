@@ -1,10 +1,10 @@
 package app
 
 import (
+	"lelv/app/controllers"
 	"log"
 	"strings"
 	"time"
-	"lelv/app/controllers"
 
 	"lelv/app/models"
 
@@ -42,7 +42,11 @@ func init() {
 		return s1 + s2
 	}
 
-	revel.TemplateFuncs["join"] = func(a []string, s string) string {		
+	revel.TemplateFuncs["shortTime"] = func(ts string) string {
+		return strings.Split(ts, " ")[0]
+	}
+
+	revel.TemplateFuncs["join"] = func(a []string, s string) string {
 		return strings.Join(a, s)
 	}
 

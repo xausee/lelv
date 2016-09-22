@@ -1,10 +1,25 @@
+&nbsp;
 <div class="row-fluid">
     <div class="col-md-12" style="background-color:#FFFFFF">
-        <dl class="dl-horizontal">
-            {{range $index, $blog := .Blogs}}
-            <dt style="text-align: left; font-weight: 500;"><a href="{{url "Blog.View" $blog.ID}}" style="color: #555555">{{$blog.Title}}</a></dt>
-            <dd class="text-right" style="color: #555555">{{$blog.CreateTimeStamp}}</dd>
+        <div style="width:100%; height:2px; border-top:1px solid #999; clear:both;visibility:hidden"></div>
+        {{range $index, $blog := .Blogs}}
+        <div class="media">
+            {{if $blog.Cover}}
+            <div class="media-left">
+                <a href={{url "Blog.View" $blog.ID}}>
+                    <img data-holder-rendered="true" class="media-object" id="Img_{{$index}}" data-src="holder.js/64x64" src="{{$blog.Cover}}" style="width: 64px; height: 64px;" alt="64x64">
+                </a>
+            </div>
             {{end}}
-        </dl>
+            <div class="media-body">
+                <input style="display:none" id="BlogID_{{$index}}" value="{{$blog.ID}}">
+                <h4 class="media-heading" id="Title_{{$index}}"><a href={{url "Blog.View" $blog.ID}} style="color: #555555">{{$blog.Title}}</a></h4>
+                <br> {{$blog.BriefText}}... ...<br><br>
+                <p class="text-right">阅读({{$blog.ViewCount}})&nbsp;&nbsp;评论({{len $blog.Comments}})&nbsp;&nbsp;{{shortTime $blog.CreateTimeStamp}}</p>
+            </div>
+        </div>
+        <div style="width:100%; height:2px; border-top:1px solid #999; clear:both;"></div>
+        {{end}} &nbsp;
     </div>
-</div>&nbsp;
+</div>
+&nbsp;

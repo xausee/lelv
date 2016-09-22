@@ -7,9 +7,11 @@
             {{range $index, $blog := .ArticlesBlogs}}
             <div class="row-fluid">
                 <h3><a href={{url "Blog.View" $blog.ID}} title="{{$blog.Title}}" target="_blank">{{$blog.Title}}</a></h3>
+                <p><a href={{url "User.Index" $blog.AuthorID}}>{{$blog.Author}}</a></p>
                 <p>{{$blog.BriefText}}...&nbsp;&nbsp;<a href={{url "Blog.View" $blog.ID}} title="{{$blog.Title}}" target="_blank">阅读全文</a></p>
             </div>
-            {{end}}
+            <p class="text-right">阅读({{$blog.ViewCount}})&nbsp;&nbsp;评论({{len $blog.Comments}})</p>
+            <hr> {{end}}
         </div>
     </div>
     <div class="col-md-2">{{template "rightpanal.html" .}}</div>

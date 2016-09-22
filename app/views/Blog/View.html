@@ -102,27 +102,6 @@
                     </div>
                 </div>
                 <div id="info"></div>
-                {{$blogID:=.Blog.ID}}
-                <!--<div class="collapse" id="collapseComments">
-                    <form class="form-horizontal" role="form" action={{url "Blog.PostComment"}} method="POST">
-                        <input id="RemoteUserID" name="RemoteUserID" value="{{.RemoteUserID}}" type="hidden">
-                        <input id="LocalUserID" name="LocalUserID" value="{{.LocalUserID}}" type="hidden">
-                        <input id="BlogIDForComment" name="BlogIDForComment" value="{{.Blog.ID}}" type="hidden"> 
-                        {{with $field := field "comment.Body" .}}
-                        <div class="form-group {{$field.ErrorClass}}">
-                            <div class="col-sm-10">
-                                <textarea class="form-control" id="{{$field.Id}}" name="{{$field.Name}}" value="{{$field.Flash}}" rows="1"></textarea>                                {{if $field.Error}}
-                                <span class="help-inline text-danger">{{$field.Error}}</span> {{end}}
-                            </div>
-                            <div class="col-sm-2">
-                                <button type="submit" class="btn btn-lg btn-primary" id="Submit" style="width: 100%;">发&nbsp;&nbsp;表</button>
-                            </div>
-                        </div>
-                        {{end}}
-                    </form>
-                    <hr style="height:1px;border:none;border-top:1px dashed #0066CC;" />
-                </div>-->
-
                 <div class="container-fluid" style="background-color:#FFFFFF">
                     {{$Comments := descendingByDateTime .Blog.Comments}} {{range $index, $comment := $Comments}} {{if eq $index 0}} &nbsp;{{end}}
                     <div class="media">
@@ -133,7 +112,7 @@
                         </div>
                         <div class="media-body">
                             <input style="display:none" id="CommentID_{{$index}}" value="{{$comment.ID}}">
-                            <h5 class="media-heading" id="CommenterID{{$index}}"><a href={{url "User.Index" $comment.CommenterID}}>{{$comment.CommenterNickName}}：&nbsp;&nbsp;</a></h5>
+                            <h5 class="media-heading" id="CommenterID{{$index}}"><a href={{url "User.Index" $comment.CommenterID}}>{{$comment.CommenterNickName}}</a>：&nbsp;&nbsp;</h5>
                             <small>{{$comment.Body}}</small>
                             <p class="text-right">
                                 <small>{{$comment.TimeStamp}}</small>
