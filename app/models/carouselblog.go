@@ -33,9 +33,7 @@ func (b *CarouselBlog) FindLast(n int) (r []CarouselBlog, err error) {
 	defer db.Close()
 
 	c := db.session.DB(Name).C(CarouselBlogs)
-	type Items map[string]string
-	err = c.Find(nil).Sort("_id").Limit(n).All(&r)
-	//err = c.Find(bson.M{"$orderby": {"$natural": -1}}).Sort("_id").Limit(n).All(&r)
+	err = c.Find(nil).Sort("-timestamp").Limit(n).All(&r)
 
 	return r, nil
 }

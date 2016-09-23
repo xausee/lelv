@@ -103,7 +103,7 @@
                 </div>
                 <div id="info"></div>
                 <div class="container-fluid" style="background-color:#FFFFFF">
-                    {{$Comments := descendingByDateTime .Blog.Comments}} {{range $index, $comment := $Comments}} {{if eq $index 0}} &nbsp;{{end}}
+                    {{$Comments := .Blog.Comments}} {{range $index, $comment := $Comments}} {{if eq $index 0}} &nbsp;{{end}}
                     <div class="media">
                         <div class="media-left">
                             <a href={{url "User.Index" $comment.CommenterID}}>

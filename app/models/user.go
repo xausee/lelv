@@ -19,17 +19,19 @@ type MockUser struct {
 
 // User 用户数据结构
 type User struct {
-	ID              string   // ID号
-	NickName        string   // 昵称
-	Email           string   // 邮箱
-	Gender          string   // 性别
-	Password        []byte   // 密码
-	Avatar          string   // 头像地址
-	Introduction    string   // 自我介绍
-	Fans            []string // 粉丝ID集
-	Watches         []string // 关注的用户ID集
-	ConversationIDs []string // 消息ID集合
-	Collection      []string // 收藏的博客ID集
+	ID                  string   // ID号
+	NickName            string   // 昵称
+	Email               string   // 邮箱
+	Gender              string   // 性别
+	Password            []byte   // 密码
+	Avatar              string   // 头像地址
+	Introduction        string   // 自我介绍
+	Fans                []string // 粉丝ID集
+	Watches             []string // 关注的用户ID集
+	ConversationIDs     []string // 消息ID集合
+	Collection          []string // 收藏的博客ID集
+	CreateTimeStamp     string   // 创建时间戳
+	LastUpdateTimeStamp string   // 最后更新时间戳
 }
 
 // SignUp 用户注册
@@ -100,6 +102,7 @@ func (m *User) Update() error {
 	newuser.NickName = m.NickName
 	newuser.Introduction = m.Introduction
 	newuser.Avatar = m.Avatar
+	newuser.LastUpdateTimeStamp = m.LastUpdateTimeStamp
 
 	err = c.Update(oldUser, newuser)
 	if err != nil {
@@ -130,7 +133,7 @@ func (m *User) FindLast(n int) (r []User, err error) {
 
 	c := db.session.DB(Name).C(Users)
 	type Items map[string]string
-	err = c.Find(bson.M{}).Sort("_id").Limit(n).All(&r)
+	err = c.Find(bson.M{}).Sort("-createtimestamp").Limit(n).All(&r)
 
 	return r, nil
 }

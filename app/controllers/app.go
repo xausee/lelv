@@ -3,7 +3,6 @@ package controllers
 import (
 	m "lelv/app/models"
 	"log"
-	"time"
 
 	"github.com/revel/revel"
 )
@@ -52,7 +51,8 @@ func (c App) Home() revel.Result {
 	)
 
 	hbls := m.HomeBlogID{}
-	blogIds, err := hbls.FindByTimeStamp(time.Now().Format("2006-01-02"))
+	//blogIds, err := hbls.FindByTimeStamp(time.Now().Format("2006-01-02"))
+	blogIds, err := hbls.GetLast()
 	if err != nil {
 		log.Println(err)
 	}
@@ -137,7 +137,8 @@ func (c App) Pictures() revel.Result {
 
 	var PicturesBlogs []m.Blog
 	hbls := m.HomeBlogID{}
-	blogIds, err := hbls.FindByTimeStamp(time.Now().Format("2006-01-02"))
+	//blogIds, err := hbls.FindByTimeStamp(time.Now().Format("2006-01-02"))
+	blogIds, err := hbls.GetLast()
 	if err != nil {
 		log.Println(err)
 	}
@@ -179,7 +180,8 @@ func (c App) Articles() revel.Result {
 
 	var ArticlesBlogs []m.Blog
 	hbls := m.HomeBlogID{}
-	blogIds, err := hbls.FindByTimeStamp(time.Now().Format("2006-01-02"))
+	//blogIds, err := hbls.FindByTimeStamp(time.Now().Format("2006-01-02"))
+	blogIds, err := hbls.GetLast()
 	if err != nil {
 		log.Println(err)
 	}

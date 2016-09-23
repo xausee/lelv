@@ -118,9 +118,22 @@ func (b *HomeBlogID) FindByTimeStamp(t string) (HomeBlogID, error) {
 	c := db.session.DB(Name).C(HomeBlogIDs)
 
 	var hbi HomeBlogID
-	err = c.Find(bson.M{"timestamp": time.Now().Format("2006-01-02")}).One(&hbi)
+	err = c.Find(bson.M{"timestamp": t}).One(&hbi)
 
 	return hbi, err
+}
+
+// GetLast 根据时间戳查询最新的记录
+func (b *HomeBlogID) GetLast() (HomeBlogID, error) {
+	db, err := NewDBManager()
+	defer db.Close()
+
+	c := db.session.DB(Name).C(HomeBlogIDs)
+
+	var ids HomeBlogID
+	err = c.Find(nil).Sort("-timestamp").Limit(1).One(&ids)
+
+	return ids, err
 }
 
 // HasTodayRecord 是否有当天的编辑记录

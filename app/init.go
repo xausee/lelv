@@ -64,7 +64,6 @@ func init() {
 	revel.TemplateFuncs["descendingByDateTime"] = func(data interface{}) interface{} {
 		switch data.(type) {
 		case []models.Comment:
-
 			for i := 0; i < len(data.([]models.Comment)); i++ {
 				for j := 0; j < len(data.([]models.Comment))-i-1; j++ {
 					t1, err := time.Parse("2006-01-02 15:04:05", data.([]models.Comment)[j].TimeStamp)

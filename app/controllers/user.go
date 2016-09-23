@@ -134,8 +134,9 @@ func (c User) PostProfile() revel.Result {
 	u := m.User{
 		ID: c.Session["UserID"],
 		//NickName:     c.Request.Form["NickName"][0],
-		NickName:     c.Session["NickName"],
-		Introduction: c.Request.Form["Introduction"][0],
+		NickName:            c.Session["NickName"],
+		Introduction:        c.Request.Form["Introduction"][0],
+		LastUpdateTimeStamp: time.Now().Format("2006-01-02 15:04:05"),
 	}
 
 	user, err := u.FindByID(c.Session["UserID"])
@@ -235,11 +236,12 @@ func (c User) PostSignUp(mockuser m.MockUser) revel.Result {
 
 	p, _ := bcrypt.GenerateFromPassword([]byte(mockuser.Password), bcrypt.DefaultCost)
 	u := m.User{
-		NickName:     mockuser.NickName,
-		Gender:       mockuser.Gender,
-		Avatar:       avatar,
-		Introduction: "这家伙有点懒，没有留下一点信息...",
-		Password:     p,
+		NickName:        mockuser.NickName,
+		Gender:          mockuser.Gender,
+		Avatar:          avatar,
+		Introduction:    "这家伙有点懒，没有留下一点信息...",
+		Password:        p,
+		CreateTimeStamp: time.Now().Format("2006-01-02 15:04:05"),
 	}
 
 	u.ID = m.CreateObjectID()

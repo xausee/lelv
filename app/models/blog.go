@@ -37,7 +37,7 @@ type Blog struct {
 	Cover               string    // 博客封面图片地址
 	BriefText           string    // 截取的文本内容
 	Content             string    // 内容
-	Pictures            []string  //博客中包含的所有图片名称集合
+	Pictures            []string  // 博客中包含的所有图片名称集合
 	ViewCount           int       // 阅读次数
 	PraiseCount         int       // 点赞次数
 	Comments            []Comment // 评论集合
@@ -114,24 +114,10 @@ func (b *Blog) FindByTag(tag string) (r []Blog, err error) {
 
 	c := db.session.DB(Name).C(Blogs)
 	type Items map[string]string
-	//err = c.Find(bson.M{"tags": Items{"$elemMatch": tag}}).All(&r)
-	err = c.Find(bson.M{"tags": tag}).Limit(100).All(&r)
+	err = c.Find(bson.M{"tags": tag}).Sort("-timestamp").Limit(100).All(&r)
 
 	return r, nil
 }
-
-// FindLast 查找最新的n个记录
-// func (b *Blog) FindLast(n int) (r []Blog, err error) {
-// 	db, err := NewDBManager()
-// 	defer db.Close()
-
-// 	c := db.session.DB(Name).C(Blogs)
-// 	type Items map[string]string
-// 	err = c.Find(nil).Sort("_id").Limit(n).All(&r)
-// 	//err = c.Find(bson.M{"$orderby": {"$natural": -1}}).Sort("_id").Limit(n).All(&r)
-
-// 	return r, nil
-// }
 
 // FindLast 查找最新的n个记录
 func (b *Blog) FindLast(n int) (r []Blog, err error) {
@@ -140,8 +126,7 @@ func (b *Blog) FindLast(n int) (r []Blog, err error) {
 
 	c := db.session.DB(Name).C(Blogs)
 	type Items map[string]string
-	err = c.Find(nil).Sort("timestamp").Limit(n).All(&r)
-	//err = c.Find(bson.M{"$orderby": {"$natural": -1}}).Sort("_id").Limit(n).All(&r)
+	err = c.Find(nil).Sort("-timestamp").Limit(n).All(&r)
 
 	return r, nil
 }
