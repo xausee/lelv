@@ -1,13 +1,15 @@
 package models
 
 import (
+	"log"
+
 	"github.com/revel/revel"
 	"gopkg.in/mgo.v2"
 )
 
 // 数据库信息
 const (
-	Name          = "travelblog"    // 数据库名
+	Name          = "lelv"          // 数据库名
 	PV            = "pv"            // page view数据表
 	Users         = "users"         // 用户信息数据表
 	Blogs         = "blogs"         // 博客数据表
@@ -25,12 +27,13 @@ type DBManager struct {
 // NewDBManager 创建数据库管理器对象
 func NewDBManager() (*DBManager, error) {
 	revel.Config.SetSection("db")
-	ip, found := revel.Config.String("ip")
+	uri, found := revel.Config.String("uri")
 	if !found {
 		revel.ERROR.Fatal("Cannot load database ip from app.conf")
 	}
 
-	session, err := mgo.Dial(ip)
+	session, err := mgo.Dial(uri)
+	log.Println(session)
 	if err != nil {
 		return nil, err
 	}
