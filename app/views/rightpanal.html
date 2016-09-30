@@ -3,32 +3,20 @@
     <span class="input-group-btn"><button class="btn btn-default" type="button" onclick="search()">搜一搜</button></span>
 </div>
 <br>-->
-<div class="panel panel-default">
-    <div class="panel-body">
-        <div class="view">
-            阅读排行榜
-            <dl class="dl-horizontal">
-                <br> {{range $index, $blog := .ViewCountBlogs}}
-                <dt style="text-align: left; font-weight: 500;"><a href="{{url "Blog.View" $blog.ID}}" style="color: #555555">{{$blog.Title}}</a></dt>
-                <dd class="text-right" style="color: #555555">{{$blog.ViewCount}}</dd>
-                {{end}}
-            </dl>
-        </div>
-    </div>
-</div>
-<div class="panel panel-default">
-    <div class="panel-body">
-        <div class="view">
-            评论排行榜
-            <dl class="dl-horizontal">
-                <br> {{range $index, $blog := .CommentsBlogs}}
-                <dt style="text-align: left; font-weight: 500;"><a href="{{url "Blog.View" $blog.ID}}" style="color: #555555">{{$blog.Title}}</a></dt>
-                <dd class="text-right" style="color: #555555">{{len $blog.Comments}}</dd>
-                {{end}}
-            </dl>
-        </div>
-    </div>
-</div>
+<h3>阅读排行榜</h3>
+<dl class="dl-horizontal">
+    <br> {{range $index, $blog := .ViewCountBlogs}}
+    <dt style="text-align: left; font-weight: 500;"><a href="{{url "Blog.View" $blog.ID}}" style="color: #555555">{{$blog.Title}}</a></dt>
+    <dd class="text-right" style="color: #555555">{{$blog.ViewCount}}</dd>
+    {{end}}
+</dl>
+<h3>评论排行榜</h3>
+<dl class="dl-horizontal">
+    <br> {{range $index, $blog := .CommentsBlogs}}
+    <dt style="text-align: left; font-weight: 500;"><a href="{{url "Blog.View" $blog.ID}}" style="color: #555555">{{$blog.Title}}</a></dt>
+    <dd class="text-right" style="color: #555555">{{len $blog.Comments}}</dd>
+    {{end}}
+</dl>
 <!--<div class="panel panel-default">
     <div class="panel-body">
         <div class="view">

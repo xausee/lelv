@@ -107,6 +107,7 @@ func (c App) Home() revel.Result {
 	c.RenderArgs["HistoryBlogs"] = HistoryBlogs
 	c.RenderArgs["CustomsBlogs"] = CustomsBlogs
 	c.RenderArgs["ShareBlogs"] = ShareBlogs
+	c.RenderArgs["StaggeredBlogs"] = LatestBlogs[0:3]
 	c.RenderArgs["LatestBlogsLeft"] = LatestBlogsLeft
 	c.RenderArgs["LatestBlogsRight"] = LatestBlogsRight
 	c.RenderArgs["FamousUsers"] = FamousUsers
