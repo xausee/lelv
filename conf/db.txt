@@ -1,6 +1,6 @@
 // 此文件存放mongo命令，用来创建和配置数据库信息
 
-user admin
+use admin
 // 创建超级管理员账号
 db.createUser({
     user: "lelvAdmin",
@@ -13,7 +13,7 @@ db.createUser({
     ]
 })
 
-user lelv
+use lelv
 // 创建对数据库lelv的普通用户
 db.createUser({
     user: "User",

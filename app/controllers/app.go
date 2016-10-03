@@ -26,94 +26,197 @@ type App struct {
 
 // Home 首页
 func (c App) Home() revel.Result {
-	cb := m.CarouselBlog{}
-	carouselBlogs, err := cb.FindLast(3)
-	if err != nil {
-		log.Println(err)
-	}
+	cn1 := 3  // 第一部分博客数
+	cn2 := 10 // 第二部分博客数
+	cn3 := 20 // 第三部分博客数
+	cn4 := 10 // 阅读排行榜博客数
+	cn5 := 10 // 评论排行榜博客数
+	cn6 := 10 // 轮播博客数
 
-	u := m.User{}
-	FamousUsers, err := u.FindLast(3)
+	// 轮播图博客取值
+	cb := m.CarouselBlog{}
+	carouselBlogs, err := cb.FindLast(cn6)
 	if err != nil {
 		log.Println(err)
 	}
 
 	var (
-		HeadBlogs        []m.Blog // 今日博客头条博客集合
-		HeadFamousBlog   []m.Blog // 今日推荐名博集合
-		NaturalBlogs     []m.Blog // 纯美大自然博客集合
-		HistoryBlogs     []m.Blog // 历史.有韵味博客集合
-		CustomsBlogs     []m.Blog // 世界.奇异风情博客集合
-		ShareBlogs       []m.Blog // 达人分享博客集合
-		LatestBlogs      []m.Blog // 及时更新博客集合
-		LatestBlogsLeft  []m.Blog // 及时更新博客集合 LatestBlogs 的前一半
-		LatestBlogsRight []m.Blog // 及时更新博客集合 LatestBlogs 的后一半
+		latestBlogs []m.Blog // 最新博客集合
+		part1       []m.Blog // 首页第一部分错层博客
+		part2Left   []m.Blog // 首页第二部分左边列表博客
+		part2Right  []m.Blog // 首页第二部分右边列表博客
+		part3Left   []m.Blog // 首页第三部分左边列表博客
+		part3Right  []m.Blog // 首页第三部分右边列表博客
 	)
-
-	hbls := m.HomeBlogID{}
-	//blogIds, err := hbls.FindByTimeStamp(time.Now().Format("2006-01-02"))
-	blogIds, err := hbls.GetLast()
-	if err != nil {
-		log.Println(err)
-	}
-
-	const N = 6
-	ch := make(chan int, N)
-	go getBlogs(blogIds.HeadBlogs, ch, &HeadBlogs)
-	go getBlogs(blogIds.HeadFamousBlog, ch, &HeadFamousBlog)
-	go getBlogs(blogIds.NaturalBlogs, ch, &NaturalBlogs)
-	go getBlogs(blogIds.HistoryBlogs, ch, &HistoryBlogs)
-	go getBlogs(blogIds.CustomsBlogs, ch, &CustomsBlogs)
-	go getBlogs(blogIds.ShareBlogs, ch, &ShareBlogs)
-
-	for i := 0; i < N; i++ {
-		<-ch
-	}
-
 	blog := m.Blog{}
 
-	n := 20
-	LatestBlogs, err = blog.FindLast(n)
+	n := cn1 + cn2 + cn3
+	latestBlogs, err = blog.FindLast(n)
 	if err != nil {
 		log.Println(err)
 	}
+	log.Println(latestBlogs)
+	count := len(latestBlogs)
 
-	l := len(LatestBlogs)
-	half := 0
-	if l%2 == 0 {
-		half = l / 2
+	// 第一部分错层博客取值
+	if count > cn1 {
+		part1 = latestBlogs[0:cn1]
 	} else {
-		half = l/2 + 1
+		part1 = latestBlogs[0:count]
 	}
-	LatestBlogsLeft = LatestBlogs[0:half]
-	LatestBlogsRight = LatestBlogs[half:]
 
-	viewCountBlogs, err := blog.FindAndSortBy("-viewcount", 10)
+	// 第二部分列表博客取值
+	if count > (cn1 + cn2) {
+		part2Left = latestBlogs[cn1 : cn1+cn2/2]
+		part2Right = latestBlogs[cn1+cn2/2 : cn1+cn2]
+	} else {
+		half1 := 0
+		if (count-cn1)%2 == 0 {
+			half1 = (count-cn1)/2 + cn1
+		} else {
+			half1 = (count-cn1)/2 + 1 + cn1
+		}
+		part2Left = latestBlogs[cn1:half1]
+		part2Right = latestBlogs[half1:]
+	}
+
+	// 第三部分列表博客取值
+	if count > (cn1 + cn2 + cn3) {
+		part3Left = latestBlogs[cn1+cn2 : cn1+cn2+cn3/2]
+		part3Right = latestBlogs[cn1+cn2+cn3/2 : cn1+cn2+cn3]
+	} else if count > (cn1 + cn2) {
+		half := 0
+		if (count-cn1-cn2)%2 == 0 {
+			half = (count-cn1-cn2)/2 + cn1 + cn2
+		} else {
+			half = (count-cn1-cn2)/2 + 1 + cn1 + cn2
+		}
+		part3Left = latestBlogs[cn1+cn2 : half]
+		part3Right = latestBlogs[half:]
+	}
+
+	// 阅读排行榜取值
+	viewCountBlogs, err := blog.FindAndSortBy("-viewcount", cn4)
 	if err != nil {
 		log.Println(err)
 	}
 
-	commentsBlogs, err := blog.FindAndSortByComments(10)
+	// 评论排行榜取值
+	commentsBlogs, err := blog.FindAndSortByComments(cn5)
 	if err != nil {
 		log.Println(err)
 	}
 	c.RenderArgs["ViewCountBlogs"] = viewCountBlogs
 	c.RenderArgs["CommentsBlogs"] = commentsBlogs
-
 	c.RenderArgs["CarouselBlog"] = carouselBlogs
-	c.RenderArgs["HeadBlogs"] = HeadBlogs
-	c.RenderArgs["HeadFamousBlog"] = HeadFamousBlog
-	c.RenderArgs["NaturalBlogs"] = NaturalBlogs
-	c.RenderArgs["HistoryBlogs"] = HistoryBlogs
-	c.RenderArgs["CustomsBlogs"] = CustomsBlogs
-	c.RenderArgs["ShareBlogs"] = ShareBlogs
-	c.RenderArgs["StaggeredBlogs"] = LatestBlogs[0:3]
-	c.RenderArgs["LatestBlogsLeft"] = LatestBlogsLeft
-	c.RenderArgs["LatestBlogsRight"] = LatestBlogsRight
-	c.RenderArgs["FamousUsers"] = FamousUsers
+	c.RenderArgs["Part1Blogs"] = part1
+	c.RenderArgs["Part2LeftBlogs"] = part2Left
+	c.RenderArgs["Part2RightBlogs"] = part2Right
+	c.RenderArgs["Part3LeftBlogs"] = part3Left
+	c.RenderArgs["Part3RightBlogs"] = part3Right
 
 	return c.Render()
 }
+
+// Home 首页
+// func (c App) Home() revel.Result {
+// 	cb := m.CarouselBlog{}
+// 	carouselBlogs, err := cb.FindLast(3)
+// 	if err != nil {
+// 		log.Println(err)
+// 	}
+
+// 	u := m.User{}
+// 	FamousUsers, err := u.FindLast(3)
+// 	if err != nil {
+// 		log.Println(err)
+// 	}
+
+// 	var (
+// 		HeadBlogs        []m.Blog // 今日博客头条博客集合
+// 		HeadFamousBlog   []m.Blog // 今日推荐名博集合
+// 		NaturalBlogs     []m.Blog // 纯美大自然博客集合
+// 		HistoryBlogs     []m.Blog // 历史.有韵味博客集合
+// 		CustomsBlogs     []m.Blog // 世界.奇异风情博客集合
+// 		ShareBlogs       []m.Blog // 达人分享博客集合
+// 		LatestBlogs      []m.Blog // 及时更新博客集合
+// 		LatestBlogsLeft  []m.Blog // 及时更新博客集合 LatestBlogs 的前一半
+// 		LatestBlogsRight []m.Blog // 及时更新博客集合 LatestBlogs 的后一半
+// 	)
+
+// 	hbls := m.HomeBlogID{}
+// 	//blogIds, err := hbls.FindByTimeStamp(time.Now().Format("2006-01-02"))
+// 	blogIds, err := hbls.GetLast()
+// 	if err != nil {
+// 		log.Println(err)
+// 	}
+
+// 	const N = 6
+// 	ch := make(chan int, N)
+// 	go getBlogs(blogIds.HeadBlogs, ch, &HeadBlogs)
+// 	go getBlogs(blogIds.HeadFamousBlog, ch, &HeadFamousBlog)
+// 	go getBlogs(blogIds.NaturalBlogs, ch, &NaturalBlogs)
+// 	go getBlogs(blogIds.HistoryBlogs, ch, &HistoryBlogs)
+// 	go getBlogs(blogIds.CustomsBlogs, ch, &CustomsBlogs)
+// 	go getBlogs(blogIds.ShareBlogs, ch, &ShareBlogs)
+
+// 	for i := 0; i < N; i++ {
+// 		<-ch
+// 	}
+
+// 	blog := m.Blog{}
+
+// 	n := 20
+// 	LatestBlogs, err = blog.FindLast(n)
+// 	if err != nil {
+// 		log.Println(err)
+// 	}
+
+// 	log.Println(LatestBlogs)
+
+// 	l := len(LatestBlogs)
+// 	half := 0
+// 	if l%2 == 0 {
+// 		half = l / 2
+// 	} else {
+// 		half = l/2 + 1
+// 	}
+// 	LatestBlogsLeft = LatestBlogs[0:half]
+// 	LatestBlogsRight = LatestBlogs[half:]
+
+// 	var StaggeredBlogs []m.Blog
+// 	if l > 3 {
+// 		StaggeredBlogs = LatestBlogs[0:3]
+// 	} else {
+// 		StaggeredBlogs = LatestBlogs[0 : l]
+// 	}
+
+// 	viewCountBlogs, err := blog.FindAndSortBy("-viewcount", 10)
+// 	if err != nil {
+// 		log.Println(err)
+// 	}
+
+// 	commentsBlogs, err := blog.FindAndSortByComments(10)
+// 	if err != nil {
+// 		log.Println(err)
+// 	}
+// 	c.RenderArgs["ViewCountBlogs"] = viewCountBlogs
+// 	c.RenderArgs["CommentsBlogs"] = commentsBlogs
+
+// 	c.RenderArgs["CarouselBlog"] = carouselBlogs
+// 	c.RenderArgs["HeadBlogs"] = HeadBlogs
+// 	c.RenderArgs["HeadFamousBlog"] = HeadFamousBlog
+// 	c.RenderArgs["NaturalBlogs"] = NaturalBlogs
+// 	c.RenderArgs["HistoryBlogs"] = HistoryBlogs
+// 	c.RenderArgs["CustomsBlogs"] = CustomsBlogs
+// 	c.RenderArgs["ShareBlogs"] = ShareBlogs
+// 	c.RenderArgs["StaggeredBlogs"] = StaggeredBlogs
+// 	c.RenderArgs["LatestBlogsLeft"] = LatestBlogsLeft
+// 	c.RenderArgs["LatestBlogsRight"] = LatestBlogsRight
+// 	c.RenderArgs["FamousUsers"] = FamousUsers
+
+// 	return c.Render()
+// }
 
 // Search 站内搜索功能
 func (c App) Search(key string) revel.Result {

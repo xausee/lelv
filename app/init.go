@@ -46,6 +46,12 @@ func init() {
 		return strings.Split(ts, " ")[0]
 	}
 
+	revel.TemplateFuncs["getDate"] = func(ts string) string {
+		s0 := strings.Split(ts, " ")[0]
+		s1 := strings.Split(s0, "-")
+		return s1[1] + "|" + s1[2]
+	}
+
 	revel.TemplateFuncs["join"] = func(a []string, s string) string {
 		return strings.Join(a, s)
 	}

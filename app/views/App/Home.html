@@ -64,21 +64,21 @@
                 <div class="col-md-12">
                     <!--样式参见：http://demo.cssmoban.com/cssthemes3/cpts_425_rj/index.html-->
                     <div class="new-grids">
-                        {{range $index, $blog := .StaggeredBlogs}} {{if even $index}}
+                        {{range $index, $blog := .Part1Blogs}} {{if even $index}}
                         <div class="col-md-6 new-grid">
                             <a href={{url "Blog.View" $blog.ID}} class="mask">
                                 <img src="{{$blog.Cover}}" class="img-responsive zoom-img" alt="乐旅博客">
                             </a>
                         </div>
                         <div class="col-md-6 new-grid1">
-                            <h5>09|04</h5>
+                            <h5>{{getDate $blog.CreateTimeStamp}}</h5>
                             <h4><a href={{url "Blog.View" $blog.ID}}>{{$blog.Title}}</a></h4>
                             <p>{{$blog.BriefText}}</p>
                         </div>
                         <div class="clearfix"></div>
                         {{else}}
                         <div class="col-md-6 new-grid1">
-                            <h5>{{shortTime $blog.CreateTimeStamp}}</h5>
+                            <h5>{{getDate $blog.CreateTimeStamp}}</h5>
                             <h4><a href={{url "Blog.View" $blog.ID}}>{{$blog.Title}}</a></h4>
                             <p>{{$blog.BriefText}}</p>
                         </div>
@@ -91,11 +91,15 @@
                         {{end}} {{end}}
                     </div>
                 </div>
-                &nbsp;
+            </div>
+            <div class="container-fluid">
                 <div class="row-fluid">
+                    <div class="col-md-12">
+                        <hr style=" height:2px;border:none;border-top:2px dotted #185598;" />
+                    </div>
                     <div class="col-md-6">
                         <dl class="dl-horizontal">
-                            {{range $index, $blog := .LatestBlogsLeft}}
+                            {{range $index, $blog := .Part2LeftBlogs}}
                             <dt style="text-align: left; font-weight: 500;"><a href={{url "Blog.View" $blog.ID}} style="color: #555555">{{$blog.Title}}</a></dt>
                             <dd class="text-right" style="color: #555555"> <a href={{url "User.Index" $blog.AuthorID}} style="color: #555555">{{$blog.Author}}</a></dd>
                             {{end}}
@@ -103,7 +107,7 @@
                     </div>
                     <div class="col-md-6">
                         <dl class="dl-horizontal">
-                            {{range $index, $blog := .LatestBlogsRight}}
+                            {{range $index, $blog := .Part2RightBlogs}}
                             <dt style="text-align: left; font-weight: 500;"><a href={{url "Blog.View" $blog.ID}} style="color: #555555">{{$blog.Title}}</a></dt>
                             <dd class="text-right" style="color: #555555"> <a href={{url "User.Index" $blog.AuthorID}} style="color: #555555">{{$blog.Author}}</a></dd>
                             {{end}}
@@ -111,11 +115,46 @@
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="col-md-2">
-            {{template "rightpanal.html" .}}
+            <div class="container-fluid">
+                <div class="row-fluid">
+                    <div class="col-md-6">
+                        {{range $index, $blog := .Part3LeftBlogs}}
+                        <div class="new-grid">
+                            {{if $blog.Cover}}
+                            <a href={{url "Blog.View" $blog.ID}} class="mask">
+                                <img src="{{$blog.Cover}}" class="img-responsive zoom-img" alt="乐旅博客">
+                            </a>
+                            {{end}}
+                            <br>
+                            <p>{{$blog.BriefText}}...</p>
+                            <p class="text-right">作者&nbsp;&nbsp;<a href={{url "User.Index" $blog.AuthorID}}>{{$blog.Author}}&nbsp;&nbsp;</a>阅读({{$blog.ViewCount}})&nbsp;&nbsp;评论({{len $blog.Comments}})</p>
+                            <hr style=" height:2px;border:none;border-top:2px dotted #185598;" />
+                        </div>
+                        {{end}}
+                    </div>
+                    <div class="col-md-6">
+                        {{range $index, $blog := .Part3RightBlogs}}
+                        <div class="new-grid">
+                            {{if $blog.Cover}}
+                            <a href={{url "Blog.View" $blog.ID}} class="mask">
+                                <img src="{{$blog.Cover}}" class="img-responsive zoom-img" alt="乐旅博客">
+                            </a>
+                            {{end}}
+                            <br>
+                            <p>{{$blog.BriefText}}...</p>
+                            <p class="text-right">作者&nbsp;&nbsp;<a href={{url "User.Index" $blog.AuthorID}}>{{$blog.Author}}&nbsp;&nbsp;</a>阅读({{$blog.ViewCount}})&nbsp;&nbsp;评论({{len $blog.Comments}})</p>
+                            <hr style=" height:2px;border:none;border-top:2px dotted #185598;" />
+                        </div>
+                        {{end}}
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
+    <div class="col-md-2">
+        {{template "rightpanal.html" .}}
+    </div>
+</div>
 </div>
 <div class="container">
     <div class="row">

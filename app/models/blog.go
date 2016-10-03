@@ -114,7 +114,7 @@ func (b *Blog) FindByTag(tag string) (r []Blog, err error) {
 
 	c := db.session.DB(Name).C(Blogs)
 	type Items map[string]string
-	err = c.Find(bson.M{"tags": tag}).Sort("-timestamp").Limit(100).All(&r)
+	err = c.Find(bson.M{"tags": tag}).Sort("-createtimestamp").Limit(100).All(&r)
 
 	return r, nil
 }
@@ -126,7 +126,7 @@ func (b *Blog) FindLast(n int) (r []Blog, err error) {
 
 	c := db.session.DB(Name).C(Blogs)
 	type Items map[string]string
-	err = c.Find(nil).Sort("-timestamp").Limit(n).All(&r)
+	err = c.Find(nil).Sort("-createtimestamp").Limit(n).All(&r)
 
 	return r, nil
 }
