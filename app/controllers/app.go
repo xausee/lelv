@@ -66,10 +66,7 @@ func (c App) Home() revel.Result {
 	}
 
 	// 第二部分列表博客取值
-	if count > (cn1 + cn2) {
-		part2Left = latestBlogs[cn1 : cn1+cn2/2]
-		part2Right = latestBlogs[cn1+cn2/2 : cn1+cn2]
-	} else {
+	if count > cn1 && count < (cn1+cn2) {
 		half1 := 0
 		if (count-cn1)%2 == 0 {
 			half1 = (count-cn1)/2 + cn1
@@ -78,13 +75,13 @@ func (c App) Home() revel.Result {
 		}
 		part2Left = latestBlogs[cn1:half1]
 		part2Right = latestBlogs[half1:]
+	} else if count > (cn1 + cn2) {
+		part2Left = latestBlogs[cn1 : cn1+cn2/2]
+		part2Right = latestBlogs[cn1+cn2/2 : cn1+cn2]
 	}
 
 	// 第三部分列表博客取值
-	if count > (cn1 + cn2 + cn3) {
-		part3Left = latestBlogs[cn1+cn2 : cn1+cn2+cn3/2]
-		part3Right = latestBlogs[cn1+cn2+cn3/2 : cn1+cn2+cn3]
-	} else if count > (cn1 + cn2) {
+	if count > (cn1+cn2) && count < (cn1+cn2+cn3) {
 		half := 0
 		if (count-cn1-cn2)%2 == 0 {
 			half = (count-cn1-cn2)/2 + cn1 + cn2
@@ -93,6 +90,9 @@ func (c App) Home() revel.Result {
 		}
 		part3Left = latestBlogs[cn1+cn2 : half]
 		part3Right = latestBlogs[half:]
+	} else if count > (cn1 + cn2 + cn3) {
+		part3Left = latestBlogs[cn1+cn2 : cn1+cn2+cn3/2]
+		part3Right = latestBlogs[cn1+cn2+cn3/2 : cn1+cn2+cn3]
 	}
 
 	// 阅读排行榜取值
