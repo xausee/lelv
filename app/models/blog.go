@@ -84,7 +84,7 @@ func (b *Blog) FindByAuthorID(id string) (blo []Blog, err error) {
 
 	c := db.session.DB(Name).C(Blogs)
 
-	err = c.Find(bson.M{"authorid": id}).All(&blo)
+	err = c.Find(bson.M{"authorid": id}).Sort("-createtimestamp").All(&blo)
 	if err != nil {
 		return nil, err
 	}

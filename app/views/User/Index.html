@@ -1,13 +1,14 @@
 {{$title := strcat .User.NickName " | 首页"}} {{set . "title" $title}} {{template "header.html" .}} {{template "navbar.html" .}}
 
 <link rel="stylesheet" href="../public/css/for-user-home.css">
+<link rel="stylesheet" href="../public/css/cpts_425_rj.css">
 <script src="../public/js/for-user-index.js"></script>
 
-<div class="container-fluid" style="background-color:#F1F1F1">
+<div class="container-fluid">
     <div class="row-fluid">
         <div class="col-md-3"></div>
-        <div class="col-md-6">&nbsp;
-            <div class="media" style="background-color:#FFFFFF">
+        <div class="col-md-6">
+            <div class="media" style="background-color:#DDDDDD">
                 <br>
                 <div class="media-left media-middle">
                     <a href="javascript:void(0)">
@@ -16,13 +17,8 @@
                     <br>
                     <p class="text-center"><a class="col-md-offset-2" href="javascript:void(0)" }}>{{.User.NickName}}</a></p>
                 </div>
-                <!--<div class="media-left media-middle" style="visibility:hidden">
-                    <a href="javascript:void(0)">
-                        <img class="media-object col-md-offset-2" src={{.User.Avatar}} height="120" width="50" alt="Oh... ">
-                    </a>
-                </div>-->
                 <div class="media-body" id="introduction">
-                    <blockquote class="blockquote-reverse text-info">
+                    <blockquote class="blockquote-reverse text-info col-md-offset-2">
                         <p>
                             <dl contenteditable="false">
                                 <dd>{{nl2br .User.Introduction}}</dd>
@@ -35,31 +31,44 @@
                     <input id="UserID" value="{{.User.ID}}" type="hidden">
                     <input id="SigninedUserID" value="{{.SigninedUserID}}" type="hidden">
                     <a id="AllBlogs" href="javascript: void(0)">博客({{.BlogsCount}})</a>&nbsp;&nbsp;
-                    <a id="Fans" href="javascript: void(0)">粉丝({{.FansCount}})</a>&nbsp;&nbsp; {{if eq .UserID .User.ID}} {{else}}
+                    <a id="Fans" href="javascript: void(0)">粉丝({{.FansCount}})</a>&nbsp;&nbsp; {{if eq .UserID .User.ID}}
+                    {{else}}
                     <a id="Watch" href="javascript: void(0)">{{if .Watched}}取消关注{{else}}关注{{end}}</a>&nbsp;&nbsp;
                     <a id="Message" href="javascript: void(0)">私信</a>&nbsp;&nbsp; {{end}}
                 </div>&nbsp;
-            </div>&nbsp;
+            </div>
             <div id="info"></div>
             <div id="content">
-                {{range $index, $item := .Blogs}}
-                <div class="thumbnail" style="background-color:#FFFFFF;padding:10px 30px 15px 30px;">
-                    {{if eq $item.Cover ""}} {{else}}
-                    <a href={{url "Blog.View" $item.ID}} title={{$item.Title}}>
-                        <br><br>
-                        <img class="lazy" src={{$item.Cover}} data-src={{$item.Cover}} alt="乐旅博客" height="450" width="1000">
-                    </a>
-                    {{end}}
-                    <div class="caption">
-                        <h3 class="text-center">{{$item.Title}}</h3> {{if $item.BriefText}}
-                        <p>{{$item.BriefText}}...<a href={{url "Blog.View" $item.ID}}>查看全文</a></p>
-                        {{end}}
-                        <p class="text-right">
-                            <small>{{$item.CreateTimeStamp}}</small>
-                        </p>
+                <!--样式参见：http://demo.cssmoban.com/cssthemes3/cpts_425_rj/index.html-->
+                <div class="new-grids">
+                    {{range $index, $blog := .Blogs}} {{if even $index}}
+                    <div class="col-md-6 new-grid">
+                        <a href={{url "Blog.View" $blog.ID}} class="mask">
+                            <img src="{{$blog.Cover}}" class="img-responsive zoom-img" alt="乐旅博客">
+                        </a>
                     </div>
+                    <div class="col-md-6 new-grid1">
+                        <h5>{{getDate $blog.CreateTimeStamp}}</h5>
+                        <h4><a href={{url "Blog.View" $blog.ID}}>{{$blog.Title}}</a></h4>
+                        <p>{{$blog.BriefText}}</p>
+                        <p class="text-right">阅读({{$blog.ViewCount}})&nbsp;&nbsp;评论({{len $blog.Comments}})</p>
+                    </div>
+                    <div class="clearfix"></div>
+                    {{else}}
+                    <div class="col-md-6 new-grid1">
+                        <h5>{{getDate $blog.CreateTimeStamp}}</h5>
+                        <h4><a href={{url "Blog.View" $blog.ID}}>{{$blog.Title}}</a></h4>
+                        <p>{{$blog.BriefText}}</p>
+                        <p class="text-right">阅读({{$blog.ViewCount}})&nbsp;&nbsp;评论({{len $blog.Comments}})</p>
+                    </div>
+                    <div class="col-md-6 new-grid">
+                        <a href={{url "Blog.View" $blog.ID}} class="mask">
+                            <img src="{{$blog.Cover}}" class="img-responsive zoom-img" alt="乐旅博客">
+                        </a>
+                    </div>
+                    <div class="clearfix"></div>
+                    {{end}} {{end}}
                 </div>
-                {{end}}
             </div>
         </div>
     </div>
