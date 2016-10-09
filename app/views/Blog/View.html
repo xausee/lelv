@@ -13,19 +13,14 @@
             <div class="media" style="background-color:#FFFFFF">
                 <br>
                 <div class="media-left media-middle">
-                    <a href={{url "User.Index" .Author.ID}}>
+                    <a href="javascript:void(0)">
                         <img class="media-object col-md-offset-2" src={{.Author.Avatar}} height="120" width="120" alt="Oh...">
                     </a>
                     <br>
                     <p class="text-center"><a class="col-md-offset-2" href={{url "User.Index" .Author.ID}}>{{.Author.NickName}}</a></p>
                 </div>
-                <!--<div class="media-left media-middle" style="visibility:hidden">
-                    <a href="javascript:void(0)">
-                        <img class="media-object col-md-offset-2" src={{.Author.Avatar}} height="120" width="50" alt="Oh... ">
-                    </a>
-                </div>-->
                 <div class="media-body" id="introduction">
-                    <blockquote class="blockquote-reverse text-info">
+                    <blockquote class="blockquote-reverse text-info col-md-offset-2">
                         <p>
                             <dl contenteditable="false">
                                 <dd>{{nl2br .Author.Introduction}}</dd>

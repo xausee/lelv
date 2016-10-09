@@ -15,7 +15,7 @@
                         <img class="media-object col-md-offset-2" src={{.User.Avatar}} height="120" width="120" alt="Oh...">
                     </a>
                     <br>
-                    <p class="text-center"><a class="col-md-offset-2" href="javascript:void(0)" }}>{{.User.NickName}}</a></p>
+                    <p class="text-center"><a class="col-md-offset-2" href="javascript:void(0)">{{.User.NickName}}</a></p>
                 </div>
                 <div class="media-body" id="introduction">
                     <blockquote class="blockquote-reverse text-info col-md-offset-2">
@@ -31,8 +31,7 @@
                     <input id="UserID" value="{{.User.ID}}" type="hidden">
                     <input id="SigninedUserID" value="{{.SigninedUserID}}" type="hidden">
                     <a id="AllBlogs" href="javascript: void(0)">博客({{.BlogsCount}})</a>&nbsp;&nbsp;
-                    <a id="Fans" href="javascript: void(0)">粉丝({{.FansCount}})</a>&nbsp;&nbsp; {{if eq .UserID .User.ID}}
-                    {{else}}
+                    <a id="Fans" href="javascript: void(0)">粉丝({{.FansCount}})</a>&nbsp;&nbsp; {{if eq .UserID .User.ID}} {{else}}
                     <a id="Watch" href="javascript: void(0)">{{if .Watched}}取消关注{{else}}关注{{end}}</a>&nbsp;&nbsp;
                     <a id="Message" href="javascript: void(0)">私信</a>&nbsp;&nbsp; {{end}}
                 </div>&nbsp;
