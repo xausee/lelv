@@ -55,7 +55,6 @@ func (c App) Home() revel.Result {
 	if err != nil {
 		log.Println(err)
 	}
-	log.Println(latestBlogs)
 	count := len(latestBlogs)
 
 	// 第一部分错层博客取值
@@ -75,7 +74,7 @@ func (c App) Home() revel.Result {
 		}
 		part2Left = latestBlogs[cn1:half1]
 		part2Right = latestBlogs[half1:]
-	} else if count > (cn1 + cn2) {
+	} else if count >= (cn1 + cn2) {
 		part2Left = latestBlogs[cn1 : cn1+cn2/2]
 		part2Right = latestBlogs[cn1+cn2/2 : cn1+cn2]
 	}
@@ -90,7 +89,7 @@ func (c App) Home() revel.Result {
 		}
 		part3Left = latestBlogs[cn1+cn2 : half]
 		part3Right = latestBlogs[half:]
-	} else if count > (cn1 + cn2 + cn3) {
+	} else if count >= (cn1 + cn2 + cn3) {
 		part3Left = latestBlogs[cn1+cn2 : cn1+cn2+cn3/2]
 		part3Right = latestBlogs[cn1+cn2+cn3/2 : cn1+cn2+cn3]
 	}
