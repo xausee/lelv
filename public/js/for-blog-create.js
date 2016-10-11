@@ -1,7 +1,7 @@
 // 博客封面图片
 var coverPic = ""
 var setCover
-// 提交form表单
+    // 提交form表单
 function PostBlog() {
     content = $('#summernote').summernote('code')
     data = new FormData();
@@ -21,7 +21,7 @@ function PostBlog() {
         cache: false,
         processData: false, // 告诉jQuery不要去处理发送的数据
         contentType: false, // 告诉jQuery不要去设置Content-Type请求头
-        success: function (data) {
+        success: function(data) {
             var form = document.getElementById("BlogForm");
             form.style.display = "none";
             var html = '<div class="alert alert-success text-center" role="alert"><br><br>\
@@ -76,7 +76,7 @@ function UploadToQiNiu(file) {
         cache: false,
         contentType: false,
         processData: false,
-        success: function (data) {
+        success: function(data) {
             $(".note-btn.btn.btn-default.btn-sm.info").remove();
             //data是返回的hash,key之类的值，key是定义的文件名
             //http://file.lelvboke.com/: 绑定到七牛云的CDN加速域名
@@ -86,18 +86,23 @@ function UploadToQiNiu(file) {
                 setCover = true;
             }
             // 传到七牛成功后，插入图片到编辑器 
-            $('#summernote').summernote('insertImage', url, function ($image) {
+            $('#summernote').summernote('insertImage', url, function($image) {
                 $image.css('width', 1900); //$image.width());
                 $image.addClass("img-responsive img-rounded")
                 $image.attr('data-filename', 'retriever');
             });
+
+            // 两张图片间隔一个段落行的高度
+            var node = document.createElement('p');
+            node.innerHTML = "&nbsp;";
+            $('#summernote').summernote('insertNode', node);
         },
-        error: function (res) {
+        error: function(res) {
             console.log(res)
             $(".note-btn.btn.btn-default.btn-sm.info").remove();
             var info = '<button data-original-title="上传失败" title="" type="button" class="note-btn btn btn-default btn-sm error">上传失败</button>'
             $(".note-btn-group.btn-group.note-insert").append(info);
-            setTimeout(function () {
+            setTimeout(function() {
                 $(".note-btn.btn.btn-default.btn-sm.error").remove();
             }, 3000);
         }
@@ -145,28 +150,28 @@ var defaultToolbar = [
 ]
 
 var toolbar = pictureBlogToolbar;
-$(document).ready(function () {
+$(document).ready(function() {
     InitSummernote();
 
-    $("#Picture").click(function () {
+    $("#Picture").click(function() {
         DestroySummernote();
         toolbar = pictureBlogToolbar;
         InitSummernote();
     });
 
-    $("#Text").click(function () {
+    $("#Text").click(function() {
         DestroySummernote();
         toolbar = textBlogToolbar;
         InitSummernote();
     });
 
-    $("#Hybrid").click(function () {
+    $("#Hybrid").click(function() {
         DestroySummernote();
         toolbar = hybridToolbar;
         InitSummernote();
     });
 
-    $("#Publish").click(function () {
+    $("#Publish").click(function() {
         PostBlog();
     });
 });
@@ -180,7 +185,7 @@ function InitSummernote() {
         maxHeight: null, // set maximum height of editor
         focus: true, // set focus to editable area after initializing summernote
         callbacks: {
-            onImageUpload: function (files) {
+            onImageUpload: function(files) {
                 console.log(files[0]);
                 UploadToQiNiu(files[0])
             }
