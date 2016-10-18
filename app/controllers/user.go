@@ -1,7 +1,9 @@
 package controllers
 
 import (
-	m "lelv/app/models"
+	"lelv/app/models/blog"
+	"lelv/app/models/conversation"
+	"lelv/app/models/user"
 	qiniu "lelv/app/qiniu"
 	qiniumock "lelv/app/qiniumock"
 	"log"
@@ -22,14 +24,14 @@ type User struct {
 func (c User) Home() revel.Result {
 	id := c.Session["UserID"]
 
-	u := m.User{}
+	u := user.User{}
 	user, err := u.FindByID(id)
 	if err != nil {
 		log.Println(err)
 		return c.Render()
 	}
 
-	b := m.Blog{}
+	b := blog.Blog{}
 	blogs, err := b.FindByAuthorID(id)
 	if err != nil {
 		log.Println(err)
@@ -54,15 +56,15 @@ func (c User) Home() revel.Result {
 
 // Index 用户对其它用户开放的首页
 func (c User) Index(idnum string) revel.Result {
-	u := m.User{}
-	user, err := u.FindByID(idnum)
+	u := user.User{}
+	us, err := u.FindByID(idnum)
 
 	if err != nil {
 		log.Println(err)
 		return c.RenderText("该用户不存在，或者已经被注销")
 	}
 
-	b := m.Blog{}
+	b := blog.Blog{}
 	blogs, err := b.FindByAuthorID(idnum)
 	if err != nil {
 		log.Println(err)
@@ -78,7 +80,7 @@ func (c User) Index(idnum string) revel.Result {
 	sid := c.Session["UserID"]
 
 	if sid != "" && sid != "Guest" {
-		su := m.User{}
+		su := user.User{}
 		signinedUser, err := su.FindByID(sid)
 		if err != nil {
 			log.Println(err)
@@ -92,11 +94,11 @@ func (c User) Index(idnum string) revel.Result {
 		}
 	}
 
-	c.RenderArgs["User"] = user
+	c.RenderArgs["User"] = us
 	c.RenderArgs["Blogs"] = blogs
 	c.RenderArgs["BlogsCount"] = len(blogs)
-	c.RenderArgs["FansCount"] = len(user.Fans)
-	c.RenderArgs["WatchCount"] = len(user.Watches)
+	c.RenderArgs["FansCount"] = len(us.Fans)
+	c.RenderArgs["WatchCount"] = len(us.Watches)
 	c.RenderArgs["Watched"] = watched
 
 	c.RenderArgs["SigninedUserID"] = sid
@@ -113,7 +115,7 @@ func (c User) Avatar() revel.Result {
 func (c User) Profile() revel.Result {
 	id := c.Session["UserID"]
 
-	u := m.User{}
+	u := user.User{}
 	user, err := u.FindByID(id)
 	if err != nil {
 		log.Println(err)
@@ -131,7 +133,7 @@ func (c User) Profile() revel.Result {
 
 // PostProfile 用户修改资料Post请求控制器
 func (c User) PostProfile() revel.Result {
-	u := m.User{
+	u := user.User{
 		ID: c.Session["UserID"],
 		//NickName:     c.Request.Form["NickName"][0],
 		NickName:            c.Session["NickName"],
@@ -205,7 +207,7 @@ func (c User) SignUp() revel.Result {
 }
 
 // PostSignUp 用户注册页，处理POST请求，从前端获取数据并写入到数据库
-func (c User) PostSignUp(mockuser m.MockUser) revel.Result {
+func (c User) PostSignUp(mockuser user.MockUser) revel.Result {
 	c.Validation.Required(mockuser.NickName).Message("用户昵称不能为空")
 	c.Validation.Required(mockuser.Password).Message("密码不能为空")
 	c.Validation.Required(mockuser.ConfirmPassword).Message("确认密码不能为空")
@@ -235,7 +237,7 @@ func (c User) PostSignUp(mockuser m.MockUser) revel.Result {
 	}
 
 	p, _ := bcrypt.GenerateFromPassword([]byte(mockuser.Password), bcrypt.DefaultCost)
-	u := m.User{
+	u := user.User{
 		NickName:        mockuser.NickName,
 		Gender:          mockuser.Gender,
 		Avatar:          avatar,
@@ -244,7 +246,7 @@ func (c User) PostSignUp(mockuser m.MockUser) revel.Result {
 		CreateTimeStamp: time.Now().Format("2006-01-02 15:04:05"),
 	}
 
-	u.ID = m.CreateObjectID()
+	u.ID = conversation.CreateObjectID()
 
 	err := u.SignUp()
 	if err != nil {
@@ -276,7 +278,7 @@ func (c User) SignIn(redirect string) revel.Result {
 }
 
 // PostSignIn 用户登录页，处理POST请求，从前端获取数据并写入到数据库
-func (c User) PostSignIn(mockuser m.MockUser) revel.Result {
+func (c User) PostSignIn(mockuser user.MockUser) revel.Result {
 	c.Validation.Required(mockuser.NickName).Message("用户昵称不能为空")
 	c.Validation.Required(mockuser.Password).Message("密码不能为空")
 
@@ -286,7 +288,7 @@ func (c User) PostSignIn(mockuser m.MockUser) revel.Result {
 		return c.Redirect(User.SignIn)
 	}
 
-	u := m.User{
+	u := user.User{
 		NickName: mockuser.NickName,
 		Password: []byte(mockuser.Password)}
 
@@ -338,7 +340,7 @@ func (c User) Collect() revel.Result {
 	id := c.Request.Form["BlogID"][0]
 
 	response := ""
-	u := m.User{}
+	u := user.User{}
 	u.ID = c.Session["UserID"]
 
 	if c.Request.Form["Flag"][0] == "收藏" {
@@ -365,15 +367,15 @@ func (c User) Collect() revel.Result {
 func (c User) Collection() revel.Result {
 	uid := c.Session["UserID"]
 
-	u := m.User{}
+	u := user.User{}
 	user, err := u.FindByID(uid)
 	if err != nil {
 		log.Println(err)
 		return c.Render(err)
 	}
 
-	b := m.Blog{}
-	blogs := []m.Blog{}
+	b := blog.Blog{}
+	blogs := []blog.Blog{}
 	for _, id := range user.Collection {
 		blog, err := b.FindByID(id)
 		if err != nil {
@@ -397,7 +399,7 @@ func (c User) AllBlogs() revel.Result {
 		id = c.Request.Form["UserID"][0]
 	}
 
-	b := m.Blog{}
+	b := blog.Blog{}
 	blogs, err := b.FindByAuthorID(id)
 	if err != nil {
 		log.Println(err)
@@ -420,11 +422,11 @@ func (c User) Watch() revel.Result {
 	uid := c.Session["UserID"]
 
 	response := ""
-	u := m.User{}
+	u := user.User{}
 	u.ID = uid
 	// currentUser, err := u.FindByID(uid)
 
-	wu := m.User{}
+	wu := user.User{}
 	wu.ID = id
 
 	if strings.Contains(c.Request.Form["Flag"][0], "取消关注") {
@@ -467,15 +469,15 @@ func (c User) Watches() revel.Result {
 	// 用户访问自己的所有粉丝
 	id := c.Session["UserID"]
 
-	u := m.User{}
-	user, err := u.FindByID(id)
+	u := user.User{}
+	us, err := u.FindByID(id)
 	if err != nil {
 		log.Println(err)
 		return c.Render(err)
 	}
 
-	watches := []m.User{}
-	for _, userID := range user.Watches {
+	watches := []user.User{}
+	for _, userID := range us.Watches {
 		f, _ := u.FindByID(userID)
 		watches = append(watches, f)
 	}
@@ -495,15 +497,15 @@ func (c User) Fans() revel.Result {
 		id = c.Request.Form["UserID"][0]
 	}
 
-	u := m.User{}
-	user, err := u.FindByID(id)
+	u := user.User{}
+	us, err := u.FindByID(id)
 	if err != nil {
 		log.Println(err)
 		return c.Render(err)
 	}
 
-	fans := []m.User{}
-	for _, userID := range user.Fans {
+	fans := []user.User{}
+	for _, userID := range us.Fans {
 		f, _ := u.FindByID(userID)
 		fans = append(fans, f)
 	}
@@ -523,7 +525,7 @@ func (c User) ConversationWith(uid string) revel.Result {
 		return c.Redirect(User.Home)
 	}
 
-	u := m.User{}
+	u := user.User{}
 	localUser, err := u.FindByID(localUserID)
 	if err != nil {
 		log.Println(err)
@@ -531,7 +533,7 @@ func (c User) ConversationWith(uid string) revel.Result {
 	}
 
 	// 检查之前是否有过会话，是则跳转到该会话
-	conDB := m.NewConversationDB()
+	conDB := conversation.NewConversationDB()
 	for _, id := range localUser.ConversationIDs {
 		conversation, err := conDB.FindByID(id)
 		if err != nil {
@@ -559,41 +561,41 @@ func (c User) ConversationWith(uid string) revel.Result {
 	return c.Redirect("Conversation?id=" + conversation.ID)
 }
 
-func createEmptyConversation(initiator, acceptor m.User) (m.Conversation, error) {
-	conDB := m.NewConversationDB()
-	conversation := m.Conversation{
-		ID:                m.CreateObjectID(),
+func createEmptyConversation(initiator, acceptor user.User) (conversation.Conversation, error) {
+	conDB := conversation.NewConversationDB()
+	conver := conversation.Conversation{
+		ID:                conversation.CreateObjectID(),
 		InitiatorID:       initiator.ID,
 		InitiatorNickName: initiator.NickName,
 		InitiatorAvatar:   initiator.Avatar,
 		AcceptorID:        acceptor.ID,
 		AcceptorNickName:  acceptor.NickName,
 		AcceptorAvatar:    acceptor.Avatar,
-		Messages:          []m.Message{},
+		Messages:          []conversation.Message{},
 		TimeStamp:         time.Now().Format("2006-01-02 15:04:05"),
 	}
 
-	err := conDB.Add(conversation)
+	err := conDB.Add(conver)
 	if err != nil {
-		return m.Conversation{}, err
+		return conversation.Conversation{}, err
 	}
 
-	err = initiator.UpdateConversationIDs(conversation.ID, true)
+	err = initiator.UpdateConversationIDs(conver.ID, true)
 	if err != nil {
-		return m.Conversation{}, err
+		return conversation.Conversation{}, err
 	}
 
-	err = acceptor.UpdateConversationIDs(conversation.ID, true)
+	err = acceptor.UpdateConversationIDs(conver.ID, true)
 	if err != nil {
-		return m.Conversation{}, err
+		return conversation.Conversation{}, err
 	}
 
-	return conversation, nil
+	return conver, nil
 }
 
 // Conversation 单个会话页面
 func (c User) Conversation(id string) revel.Result {
-	conDB := m.NewConversationDB()
+	conDB := conversation.NewConversationDB()
 
 	conversation, err := conDB.FindByID(id)
 	if err != nil {
@@ -640,29 +642,29 @@ func (c User) Conversation(id string) revel.Result {
 
 // PostMessage 私信会话中发送单条消息, POST 数据处理
 func (c User) PostMessage() revel.Result {
-	from := m.From{
+	from := conversation.From{
 		UserID:       c.Session["UserID"],
 		UserAvatar:   c.Session["LocalUserAvatar"],
 		UserNickName: c.Session["LocalUserNickName"],
-		Status:       m.Read,
+		Status:       conversation.Read,
 	}
 
-	to := m.To{
+	to := conversation.To{
 		UserID:       c.Session["RemoteUserID"],
 		UserAvatar:   c.Session["RemoteUserAvatar"],
 		UserNickName: c.Session["RemoteUserNickName"],
-		Status:       m.Unread,
+		Status:       conversation.Unread,
 	}
 
-	message := m.Message{
-		ID:        m.CreateObjectID(),
+	message := conversation.Message{
+		ID:        conversation.CreateObjectID(),
 		From:      from,
 		To:        to,
 		Content:   c.Request.Form["Content"][0],
 		TimeStamp: time.Now().Format("2006-01-02 15:04:05"),
 	}
 
-	conDB := m.NewConversationDB()
+	conDB := conversation.NewConversationDB()
 	err := conDB.AddMessage(c.Request.Form["ConversationID"][0], message)
 	if err != nil {
 		log.Println(err)
@@ -688,15 +690,15 @@ func (c User) PostMessage() revel.Result {
 func (c User) Conversations() revel.Result {
 	id := c.Session["UserID"]
 
-	u := m.User{}
+	u := user.User{}
 	user, err := u.FindByID(id)
 	if err != nil {
 		log.Println(err)
 		return c.Render(err)
 	}
 
-	conversations := []m.Conversation{}
-	conDB := m.NewConversationDB()
+	conversations := []conversation.Conversation{}
+	conDB := conversation.NewConversationDB()
 	for _, id := range user.ConversationIDs {
 		log.Println(id)
 		convertion, err := conDB.FindByID(id)
@@ -716,7 +718,7 @@ func (c User) Conversations() revel.Result {
 func (c User) UnreadConversations() revel.Result {
 	id := c.Session["UserID"]
 
-	u := m.User{}
+	u := user.User{}
 	user, err := u.FindByID(id)
 	if err != nil {
 		log.Println(err)
@@ -724,11 +726,11 @@ func (c User) UnreadConversations() revel.Result {
 	}
 
 	type ConversationWithUnreadMessageCount struct {
-		Conversation       m.Conversation
+		Conversation       conversation.Conversation
 		UnreadMessageCount int
 	}
 	totalUnreadCount, conversations := 0, []ConversationWithUnreadMessageCount{}
-	conDB := m.NewConversationDB()
+	conDB := conversation.NewConversationDB()
 
 	for _, id := range user.ConversationIDs {
 		convertion, err := conDB.FindByID(id)
@@ -749,10 +751,10 @@ func (c User) UnreadConversations() revel.Result {
 	return c.Render()
 }
 
-func getUnreadMsgCount(userID string, conversation m.Conversation) int {
+func getUnreadMsgCount(userID string, conver conversation.Conversation) int {
 	sum := 0
-	for _, message := range conversation.Messages {
-		if message.To.UserID == userID && message.To.Status == m.Unread {
+	for _, message := range conver.Messages {
+		if message.To.UserID == userID && message.To.Status == conversation.Unread {
 			sum++
 		}
 	}
@@ -761,13 +763,13 @@ func getUnreadMsgCount(userID string, conversation m.Conversation) int {
 
 // GetUnreadMsgCount 获取用户未读消息数
 func GetUnreadMsgCount(userID string) int {
-	u := m.User{}
+	u := user.User{}
 	user, err := u.FindByID(userID)
 	if err != nil {
 		log.Println(err)
 	}
 
-	unreadCount, conDB := 0, m.NewConversationDB()
+	unreadCount, conDB := 0, conversation.NewConversationDB()
 
 	for _, id := range user.ConversationIDs {
 		convertion, err := conDB.FindByID(id)
@@ -785,18 +787,18 @@ func GetUnreadMsgCount(userID string) int {
 func (c User) GetUnreadMessages(conversationID string) revel.Result {
 	userID := c.Session["UserID"]
 
-	var messages []m.Message
-	messages = make([]m.Message, 0)
-	conDB := m.NewConversationDB()
+	var messages []conversation.Message
+	messages = make([]conversation.Message, 0)
+	conDB := conversation.NewConversationDB()
 
 	for i := 0; i < 60; i++ {
-		convertion, err := conDB.FindByID(conversationID)
+		conver, err := conDB.FindByID(conversationID)
 		if err != nil {
 			log.Println("查找会话" + conversationID + "发生错误：" + err.Error())
 		}
 
-		for _, message := range convertion.Messages {
-			if message.To.UserID == userID && message.To.Status == m.Unread {
+		for _, message := range conver.Messages {
+			if message.To.UserID == userID && message.To.Status == conversation.Unread {
 				messages = append(messages, message)
 			}
 

@@ -1,13 +1,15 @@
 package controllers
 
 import (
+	"lelv/app/models/admin"
+	"lelv/app/models/blog"
+	"lelv/app/models/csblog"
+	"lelv/app/qiniu"
 	"log"
 	"os"
 	"strconv"
 	"strings"
 	"time"
-	m "lelv/app/models"
-	"lelv/app/qiniu"
 
 	"github.com/revel/revel"
 )
@@ -25,7 +27,7 @@ func (c Admin) Home() revel.Result {
 
 // SearchForCarousel 站内搜索功能
 func (c Admin) SearchForCarousel(key string) revel.Result {
-	b := m.Blog{}
+	b := blog.Blog{}
 	bs, err := b.FindByTag(key)
 	if err != nil {
 		log.Println(err)
@@ -38,7 +40,7 @@ func (c Admin) SearchForCarousel(key string) revel.Result {
 
 // SearchForModule 站内搜索功能
 func (c Admin) SearchForModule(key string) revel.Result {
-	b := m.Blog{}
+	b := blog.Blog{}
 	bs, err := b.FindByTag(key)
 	if err != nil {
 		log.Println(err)
@@ -58,7 +60,7 @@ func (c Admin) Carousel() revel.Result {
 // PostCarouselBlog 新增轮播博客信息
 func (c Admin) PostCarouselBlog() revel.Result {
 	id := c.Request.Form["ID"][0]
-	b := m.CarouselBlog{
+	b := csblog.CarouselBlog{
 		ID:        id,
 		Title:     c.Request.Form["Title"][0],
 		TimeStamp: time.Now().Format("2006-01-02 15:04:05"),
@@ -95,7 +97,7 @@ func (c Admin) PostCarouselBlog() revel.Result {
 }
 
 // EditHomeBlog 编辑要在首页显示的博客
-func (c Admin) EditHomeBlog(t m.BlogType, title string) revel.Result {
+func (c Admin) EditHomeBlog(t admin.BlogType, title string) revel.Result {
 	c.RenderArgs["BlogType"] = t
 	c.RenderArgs["Title"] = title
 
@@ -118,10 +120,10 @@ func (c Admin) PostEditHomeBlog() revel.Result {
 		return c.Redirect(Admin.EditHomeBlog)
 	}
 
-	b := m.HomeBlogID{
+	b := admin.HomeBlogID{
 		TimeStamp: time.Now().Format("2006-01-02 15:04:05"),
 	}
-	b.AddOrUpdate(m.BlogType(t), ids)
+	b.AddOrUpdate(admin.BlogType(t), ids)
 
 	return c.Redirect(Admin.EditHomeBlog)
 }

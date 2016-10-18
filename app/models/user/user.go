@@ -1,7 +1,8 @@
-package models
+package user
 
 import (
 	"errors"
+	"lelv/app/models/dbmgr"
 	"log"
 
 	"golang.org/x/crypto/bcrypt"
@@ -36,10 +37,11 @@ type User struct {
 
 // SignUp 用户注册
 func (m *User) SignUp() error {
-	db, err := NewDBManager()
+	db, err := dbmgr.NewDBManager()
 	defer db.Close()
 
-	c := db.session.DB(Name).C(Users)
+	c := db.Session.DB(dbmgr.Name).C(dbmgr.Users)
+
 	i, _ := c.Find(bson.M{"nickname": m.NickName}).Count()
 	if i != 0 {
 		return errors.New("该账号已被注册")
@@ -56,10 +58,11 @@ func (m *User) SignUp() error {
 
 // SignIn 用户登录
 func (m *User) SignIn() error {
-	db, err := NewDBManager()
+	db, err := dbmgr.NewDBManager()
 	defer db.Close()
 
-	c := db.session.DB(Name).C(Users)
+	c := db.Session.DB(dbmgr.Name).C(dbmgr.Users)
+
 	i, _ := c.Find(bson.M{"nickname": m.NickName}).Count()
 	if i == 0 {
 		err = errors.New("用户不存在")
@@ -86,10 +89,10 @@ func (m *User) SignIn() error {
 
 // Update 根据ID查找用户
 func (m *User) Update() error {
-	db, err := NewDBManager()
+	db, err := dbmgr.NewDBManager()
 	defer db.Close()
 
-	c := db.session.DB(Name).C(Users)
+	c := db.Session.DB(dbmgr.Name).C(dbmgr.Users)
 
 	var oldUser User
 	err = c.Find(bson.M{"id": m.ID}).One(&oldUser)
@@ -114,10 +117,11 @@ func (m *User) Update() error {
 
 // FindByID 根据ID查找用户
 func (m *User) FindByID(id string) (u User, err error) {
-	db, err := NewDBManager()
+	db, err := dbmgr.NewDBManager()
 	defer db.Close()
 
-	c := db.session.DB(Name).C(Users)
+	c := db.Session.DB(dbmgr.Name).C(dbmgr.Users)
+
 	err = c.Find(bson.M{"id": id}).One(&u)
 	if err != nil {
 		return u, err
@@ -128,10 +132,11 @@ func (m *User) FindByID(id string) (u User, err error) {
 
 // FindLast 查找最新的n个记录
 func (m *User) FindLast(n int) (r []User, err error) {
-	db, err := NewDBManager()
+	db, err := dbmgr.NewDBManager()
 	defer db.Close()
 
-	c := db.session.DB(Name).C(Users)
+	c := db.Session.DB(dbmgr.Name).C(dbmgr.Users)
+
 	type Items map[string]string
 	err = c.Find(bson.M{}).Sort("-createtimestamp").Limit(n).All(&r)
 
@@ -140,10 +145,11 @@ func (m *User) FindLast(n int) (r []User, err error) {
 
 // Count 获取所有用户数量
 func (m *User) Count() (int, error) {
-	db, err := NewDBManager()
+	db, err := dbmgr.NewDBManager()
 	defer db.Close()
 
-	c := db.session.DB(Name).C(Users)
+	c := db.Session.DB(dbmgr.Name).C(dbmgr.Users)
+
 	n, err := c.Find(bson.M{}).Count()
 
 	if err != nil {
@@ -156,10 +162,10 @@ func (m *User) Count() (int, error) {
 // Collect 收藏博客
 // flag 为true：收藏， false：取消收藏
 func (m *User) Collect(id string, flag bool) error {
-	db, err := NewDBManager()
+	db, err := dbmgr.NewDBManager()
 	defer db.Close()
 
-	c := db.session.DB(Name).C(Users)
+	c := db.Session.DB(dbmgr.Name).C(dbmgr.Users)
 
 	var old User
 	err = c.Find(bson.M{"id": m.ID}).One(&old)
@@ -197,10 +203,10 @@ func (m *User) Collect(id string, flag bool) error {
 // UpdateWatch 关注
 // flag 为true：收藏， false：取消收藏
 func (m *User) UpdateWatch(id string, flag bool) error {
-	db, err := NewDBManager()
+	db, err := dbmgr.NewDBManager()
 	defer db.Close()
 
-	c := db.session.DB(Name).C(Users)
+	c := db.Session.DB(dbmgr.Name).C(dbmgr.Users)
 
 	var old User
 	err = c.Find(bson.M{"id": m.ID}).One(&old)
@@ -238,10 +244,10 @@ func (m *User) UpdateWatch(id string, flag bool) error {
 // UpdateFans 粉丝
 // flag 为true：添加粉丝， false：取消粉丝
 func (m *User) UpdateFans(id string, flag bool) error {
-	db, err := NewDBManager()
+	db, err := dbmgr.NewDBManager()
 	defer db.Close()
 
-	c := db.session.DB(Name).C(Users)
+	c := db.Session.DB(dbmgr.Name).C(dbmgr.Users)
 
 	var old User
 	err = c.Find(bson.M{"id": m.ID}).One(&old)
@@ -279,10 +285,10 @@ func (m *User) UpdateFans(id string, flag bool) error {
 // UpdateConversationIDs 更新会话ID数据
 // flag 为true：添加会话， false：删除会话
 func (m *User) UpdateConversationIDs(id string, flag bool) error {
-	db, err := NewDBManager()
+	db, err := dbmgr.NewDBManager()
 	defer db.Close()
 
-	c := db.session.DB(Name).C(Users)
+	c := db.Session.DB(dbmgr.Name).C(dbmgr.Users)
 
 	var old User
 	log.Println(m.ID)

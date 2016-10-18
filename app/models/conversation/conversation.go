@@ -1,6 +1,7 @@
-package models
+package conversation
 
 import (
+	"lelv/app/models/dbmgr"
 	"log"
 
 	"gopkg.in/mgo.v2/bson"
@@ -66,10 +67,10 @@ func CreateObjectID() string {
 
 // Add 添加会话到数据库
 func (m ConversationDB) Add(conversation Conversation) error {
-	db, err := NewDBManager()
+	db, err := dbmgr.NewDBManager()
 	defer db.Close()
 
-	c := db.session.DB(Name).C(Conversations)
+	c := db.Session.DB(dbmgr.Name).C(dbmgr.Conversations)
 
 	err = c.Insert(conversation)
 	if err != nil {
@@ -81,10 +82,10 @@ func (m ConversationDB) Add(conversation Conversation) error {
 
 // FindByID 根据会话id查找会话
 func (m ConversationDB) FindByID(id string) (con Conversation, err error) {
-	db, err := NewDBManager()
+	db, err := dbmgr.NewDBManager()
 	defer db.Close()
 
-	c := db.session.DB(Name).C(Conversations)
+	c := db.Session.DB(dbmgr.Name).C(dbmgr.Conversations)
 
 	err = c.Find(bson.M{"id": id}).One(&con)
 	if err != nil {
@@ -96,10 +97,10 @@ func (m ConversationDB) FindByID(id string) (con Conversation, err error) {
 
 // AddMessage 给会话添加一条消息
 func (m *ConversationDB) AddMessage(conversionID string, msg Message) error {
-	db, err := NewDBManager()
+	db, err := dbmgr.NewDBManager()
 	defer db.Close()
 
-	c := db.session.DB(Name).C(Conversations)
+	c := db.Session.DB(dbmgr.Name).C(dbmgr.Conversations)
 	var (
 		oldConver Conversation
 		newConver Conversation
@@ -125,10 +126,10 @@ func (m *ConversationDB) AddMessage(conversionID string, msg Message) error {
 
 // ClearMessageStatus 清除当前会话中所有消息的未读取状态
 func (m *ConversationDB) ClearMessageStatus(conversionID string) error {
-	db, err := NewDBManager()
+	db, err := dbmgr.NewDBManager()
 	defer db.Close()
 
-	c := db.session.DB(Name).C(Conversations)
+	c := db.Session.DB(dbmgr.Name).C(dbmgr.Conversations)
 	var (
 		oldConver Conversation
 		newConver Conversation

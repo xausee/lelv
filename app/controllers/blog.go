@@ -1,10 +1,14 @@
 package controllers
 
 import (
-	m "lelv/app/models"
+	"lelv/app/models/blog"
+	"lelv/app/models/conversation"
+	"lelv/app/models/dbmgr"
+	"lelv/app/models/user"
 	qiniu "lelv/app/qiniu"
 	qiniumock "lelv/app/qiniumock"
 	"log"
+
 	"strings"
 	"time"
 
@@ -34,21 +38,21 @@ func (c Blog) Create() revel.Result {
 }
 
 // PostBlog 写博客页面，处理POST请求，从前端获取数据并写入到数据库
-func (c Blog) PostBlog(blog m.Blog) revel.Result {
-	var t m.Type
+func (c Blog) PostBlog(b blog.Blog) revel.Result {
+	var t blog.Type
 	switch c.Request.Form["type"][0] {
 	case "Picture":
-		t = m.Picture
+		t = blog.Picture
 	case "Text":
-		t = m.Text
+		t = blog.Text
 	case "Hybrid":
-		t = m.Hybrid
+		t = blog.Hybrid
 
 	}
 	tags := strings.Split(c.Request.Form["tags"][0], ",")
 	pictures := strings.Split(c.Request.Form["pictures"][0], ",")
-	blog = m.Blog{
-		ID:                  m.CreateObjectID(),
+	b = blog.Blog{
+		ID:                  conversation.CreateObjectID(),
 		AuthorID:            c.Session["UserID"],
 		Author:              c.Session["NickName"],
 		Tags:                tags,
@@ -61,15 +65,15 @@ func (c Blog) PostBlog(blog m.Blog) revel.Result {
 		CreateTimeStamp:     time.Now().Format("2006-01-02 15:04:05"),
 		LastUpdateTimeStamp: time.Now().Format("2006-01-02 15:04:05")}
 
-	blog.Add()
+	b.Add(b)
 
-	return c.RenderText(blog.ID)
+	return c.RenderText(b.ID)
 }
 
 // View 查看博客
 func (c Blog) View(id string) revel.Result {
 	// 获取博客信息
-	b := m.Blog{}
+	b := blog.Blog{}
 	b.ID = id
 	blog, err := b.FindByID(id)
 	if err != nil {
@@ -78,7 +82,7 @@ func (c Blog) View(id string) revel.Result {
 
 	// 获取作者信息
 	aid := blog.AuthorID
-	u := m.User{}
+	u := user.User{}
 	author, err := u.FindByID(aid)
 	if err != nil {
 		log.Println(err)
@@ -86,7 +90,7 @@ func (c Blog) View(id string) revel.Result {
 	}
 
 	collected := false
-	if c.Session["UserID"] != "" && c.Session["UserID"] != m.Guest {
+	if c.Session["UserID"] != "" && c.Session["UserID"] != dbmgr.Guest {
 		user, err := u.FindByID(c.Session["UserID"])
 		if err != nil {
 			log.Println(err)
@@ -119,7 +123,7 @@ func (c Blog) View(id string) revel.Result {
 // Edit 编辑博客
 func (c Blog) Edit(id string) revel.Result {
 	// 获取博客信息
-	b := m.Blog{}
+	b := blog.Blog{}
 	b.ID = id
 	blog, err := b.FindByID(id)
 	if err != nil {
@@ -146,21 +150,21 @@ func (c Blog) Edit(id string) revel.Result {
 func (c Blog) PostEdit() revel.Result {
 	// 获取博客信息
 	id := c.Request.Form["id"][0]
-	b := m.Blog{}
+	b := blog.Blog{}
 	b.ID = id
 	OldBlog, err := b.FindByID(id)
 	if err != nil {
 		log.Println("获取博客失败， ID：" + id)
 	}
 
-	var t m.Type
+	var t blog.Type
 	switch c.Request.Form["type"][0] {
 	case "Picture":
-		t = m.Picture
+		t = blog.Picture
 	case "Text":
-		t = m.Text
+		t = blog.Text
 	case "Hybrid":
-		t = m.Hybrid
+		t = blog.Hybrid
 	}
 
 	tags := strings.Split(c.Request.Form["tags"][0], ",")
@@ -190,7 +194,7 @@ func (c Blog) PostEdit() revel.Result {
 
 // Delete 删除博客
 func (c Blog) Delete(id string) revel.Result {
-	b := m.Blog{}
+	b := blog.Blog{}
 
 	blog, err := b.FindByID(id)
 	if err != nil {
@@ -218,8 +222,8 @@ func (c Blog) Delete(id string) revel.Result {
 }
 
 // PostComment 发表评论, POST 数据处理
-func (c Blog) PostComment(comment m.Comment) revel.Result {
-	u := m.User{}
+func (c Blog) PostComment(comment blog.Comment) revel.Result {
+	u := user.User{}
 	user, err := u.FindByID(c.Session["UserID"])
 	if err != nil {
 		log.Println(err)
@@ -232,7 +236,7 @@ func (c Blog) PostComment(comment m.Comment) revel.Result {
 		return c.Render(err)
 	}
 
-	b := m.Blog{}
+	b := blog.Blog{}
 	b.ID = blogID
 	blog, err := b.FindByID(blogID)
 	if err != nil {
@@ -240,7 +244,7 @@ func (c Blog) PostComment(comment m.Comment) revel.Result {
 		return c.Render(err)
 	}
 
-	comment.ID = m.CreateObjectID()
+	comment.ID = conversation.CreateObjectID()
 	comment.CommenterID = c.Session["UserID"]
 	comment.CommenterAvatar = user.Avatar
 	comment.CommenterNickName = c.Session["NickName"]

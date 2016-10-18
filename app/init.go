@@ -2,11 +2,11 @@ package app
 
 import (
 	"lelv/app/controllers"
+	"lelv/app/models/blog"
+	"lelv/app/models/conversation"
 	"log"
 	"strings"
 	"time"
-
-	"lelv/app/models"
 
 	"github.com/revel/revel"
 )
@@ -56,7 +56,7 @@ func init() {
 		return strings.Join(a, s)
 	}
 
-	revel.TemplateFuncs["descendingCommentByID"] = func(data []models.Comment) []models.Comment {
+	revel.TemplateFuncs["descendingCommentByID"] = func(data []blog.Comment) []blog.Comment {
 		for i := 0; i < len(data); i++ {
 			for j := 0; j < len(data)-i-1; j++ {
 				if data[j].ID < data[j+1].ID {
@@ -69,36 +69,36 @@ func init() {
 
 	revel.TemplateFuncs["descendingByDateTime"] = func(data interface{}) interface{} {
 		switch data.(type) {
-		case []models.Comment:
-			for i := 0; i < len(data.([]models.Comment)); i++ {
-				for j := 0; j < len(data.([]models.Comment))-i-1; j++ {
-					t1, err := time.Parse("2006-01-02 15:04:05", data.([]models.Comment)[j].TimeStamp)
-					t2, err := time.Parse("2006-01-02 15:04:05", data.([]models.Comment)[j+1].TimeStamp)
+		case []blog.Comment:
+			for i := 0; i < len(data.([]blog.Comment)); i++ {
+				for j := 0; j < len(data.([]blog.Comment))-i-1; j++ {
+					t1, err := time.Parse("2006-01-02 15:04:05", data.([]blog.Comment)[j].TimeStamp)
+					t2, err := time.Parse("2006-01-02 15:04:05", data.([]blog.Comment)[j+1].TimeStamp)
 
 					if err == nil && t1.Before(t2) {
-						data.([]models.Comment)[j], data.([]models.Comment)[j+1] = data.([]models.Comment)[j+1], data.([]models.Comment)[j]
+						data.([]blog.Comment)[j], data.([]blog.Comment)[j+1] = data.([]blog.Comment)[j+1], data.([]blog.Comment)[j]
 					}
 				}
 			}
-		case []models.Conversation:
-			for i := 0; i < len(data.([]models.Conversation)); i++ {
-				for j := 0; j < len(data.([]models.Conversation))-i-1; j++ {
-					t1, err := time.Parse("2006-01-02 15:04:05", data.([]models.Conversation)[j].TimeStamp)
-					t2, err := time.Parse("2006-01-02 15:04:05", data.([]models.Conversation)[j+1].TimeStamp)
+		case []conversation.Conversation:
+			for i := 0; i < len(data.([]conversation.Conversation)); i++ {
+				for j := 0; j < len(data.([]conversation.Conversation))-i-1; j++ {
+					t1, err := time.Parse("2006-01-02 15:04:05", data.([]conversation.Conversation)[j].TimeStamp)
+					t2, err := time.Parse("2006-01-02 15:04:05", data.([]conversation.Conversation)[j+1].TimeStamp)
 
 					if err == nil && t1.Before(t2) {
-						data.([]models.Conversation)[j], data.([]models.Conversation)[j+1] = data.([]models.Conversation)[j+1], data.([]models.Conversation)[j]
+						data.([]conversation.Conversation)[j], data.([]conversation.Conversation)[j+1] = data.([]conversation.Conversation)[j+1], data.([]conversation.Conversation)[j]
 					}
 				}
 			}
-		case []models.Message:
-			for i := 0; i < len(data.([]models.Message)); i++ {
-				for j := 0; j < len(data.([]models.Message))-i-1; j++ {
-					t1, err := time.Parse("2006-01-02 15:04:05", data.([]models.Message)[j].TimeStamp)
-					t2, err := time.Parse("2006-01-02 15:04:05", data.([]models.Message)[j+1].TimeStamp)
+		case []conversation.Message:
+			for i := 0; i < len(data.([]conversation.Message)); i++ {
+				for j := 0; j < len(data.([]conversation.Message))-i-1; j++ {
+					t1, err := time.Parse("2006-01-02 15:04:05", data.([]conversation.Message)[j].TimeStamp)
+					t2, err := time.Parse("2006-01-02 15:04:05", data.([]conversation.Message)[j+1].TimeStamp)
 
 					if err == nil && t1.Before(t2) {
-						data.([]models.Message)[j], data.([]models.Message)[j+1] = data.([]models.Message)[j+1], data.([]models.Message)[j]
+						data.([]conversation.Message)[j], data.([]conversation.Message)[j+1] = data.([]conversation.Message)[j+1], data.([]conversation.Message)[j]
 					}
 				}
 			}
@@ -110,7 +110,7 @@ func init() {
 		return data
 	}
 
-	revel.TemplateFuncs["getLastObj"] = func(data []models.Message) models.Message {
+	revel.TemplateFuncs["getLastObj"] = func(data []conversation.Message) conversation.Message {
 		return data[len(data)-1]
 	}
 

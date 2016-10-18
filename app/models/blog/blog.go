@@ -1,6 +1,7 @@
-package models
+package blog
 
 import (
+	"lelv/app/models/dbmgr"
 	"log"
 
 	"gopkg.in/mgo.v2/bson"
@@ -46,28 +47,28 @@ type Blog struct {
 }
 
 // Add 新增
-func (b *Blog) Add() error {
-	db, err := NewDBManager()
+func (b Blog) Add(u Blog) error {
+	db, err := dbmgr.NewDBManager()
 	defer db.Close()
 
-	c := db.session.DB(Name).C(Blogs)
+	c := db.Session.DB(dbmgr.Name).C(dbmgr.Blogs)
 
-	err = c.Insert(b)
+	err = c.Insert(u)
 	if err != nil {
-		log.Println("创建博客失败：")
-		log.Println(b)
+		log.Println("创建博客失败：{0}", u.Title)
 		return err
 	}
+	log.Println("创建博客失败：{0}", u.Title)
 
 	return nil
 }
 
 // FindByID 根据博客ID查找
 func (b *Blog) FindByID(id string) (blo Blog, err error) {
-	db, err := NewDBManager()
+	db, err := dbmgr.NewDBManager()
 	defer db.Close()
 
-	c := db.session.DB(Name).C(Blogs)
+	c := db.Session.DB(dbmgr.Name).C(dbmgr.Blogs)
 
 	err = c.Find(bson.M{"id": id}).One(&blo)
 	if err != nil {
@@ -79,10 +80,10 @@ func (b *Blog) FindByID(id string) (blo Blog, err error) {
 
 // FindByAuthorID 根据作者ID查找
 func (b *Blog) FindByAuthorID(id string) (blo []Blog, err error) {
-	db, err := NewDBManager()
+	db, err := dbmgr.NewDBManager()
 	defer db.Close()
 
-	c := db.session.DB(Name).C(Blogs)
+	c := db.Session.DB(dbmgr.Name).C(dbmgr.Blogs)
 
 	err = c.Find(bson.M{"authorid": id}).Sort("-createtimestamp").All(&blo)
 	if err != nil {
@@ -94,10 +95,10 @@ func (b *Blog) FindByAuthorID(id string) (blo []Blog, err error) {
 
 // GetCountByAuthorID 根据作者ID查找
 func (b *Blog) GetCountByAuthorID(id string) (count int, err error) {
-	db, err := NewDBManager()
+	db, err := dbmgr.NewDBManager()
 	defer db.Close()
 
-	c := db.session.DB(Name).C(Blogs)
+	c := db.Session.DB(dbmgr.Name).C(dbmgr.Blogs)
 
 	count, err = c.Find(bson.M{"authorid": id}).Count()
 	if err != nil {
@@ -109,10 +110,10 @@ func (b *Blog) GetCountByAuthorID(id string) (count int, err error) {
 
 // FindByTag 根据博客标签查找
 func (b *Blog) FindByTag(tag string) (r []Blog, err error) {
-	db, err := NewDBManager()
+	db, err := dbmgr.NewDBManager()
 	defer db.Close()
 
-	c := db.session.DB(Name).C(Blogs)
+	c := db.Session.DB(dbmgr.Name).C(dbmgr.Blogs)
 	type Items map[string]string
 	err = c.Find(bson.M{"tags": tag}).Sort("-createtimestamp").Limit(100).All(&r)
 
@@ -121,10 +122,10 @@ func (b *Blog) FindByTag(tag string) (r []Blog, err error) {
 
 // FindLast 查找最新的n个记录
 func (b *Blog) FindLast(n int) (r []Blog, err error) {
-	db, err := NewDBManager()
+	db, err := dbmgr.NewDBManager()
 	defer db.Close()
 
-	c := db.session.DB(Name).C(Blogs)
+	c := db.Session.DB(dbmgr.Name).C(dbmgr.Blogs)
 	type Items map[string]string
 	err = c.Find(nil).Sort("-createtimestamp").Limit(n).All(&r)
 
@@ -133,10 +134,10 @@ func (b *Blog) FindLast(n int) (r []Blog, err error) {
 
 // Count 获取所有博客数量
 func (b *Blog) Count() (int, error) {
-	db, err := NewDBManager()
+	db, err := dbmgr.NewDBManager()
 	defer db.Close()
 
-	c := db.session.DB(Name).C(Blogs)
+	c := db.Session.DB(dbmgr.Name).C(dbmgr.Blogs)
 	n, err := c.Find(bson.M{}).Count()
 
 	if err != nil {
@@ -148,10 +149,10 @@ func (b *Blog) Count() (int, error) {
 
 // UpdateView 更新阅读数量
 func (b *Blog) UpdateView() {
-	db, _ := NewDBManager()
+	db, _ := dbmgr.NewDBManager()
 	defer db.Close()
 
-	c := db.session.DB(Name).C(Blogs)
+	c := db.Session.DB(dbmgr.Name).C(dbmgr.Blogs)
 
 	var old Blog
 	c.Find(bson.M{"id": b.ID}).One(&old)
@@ -164,10 +165,10 @@ func (b *Blog) UpdateView() {
 
 // AddComment 更新阅读数量
 func (b *Blog) AddComment(comment Comment) error {
-	db, _ := NewDBManager()
+	db, _ := dbmgr.NewDBManager()
 	defer db.Close()
 
-	c := db.session.DB(Name).C(Blogs)
+	c := db.Session.DB(dbmgr.Name).C(dbmgr.Blogs)
 
 	var old Blog
 	c.Find(bson.M{"id": b.ID}).One(&old)
@@ -186,10 +187,11 @@ func (b *Blog) GetViewCount() int {
 
 // FindAndSortBy 查找所有记录， 按条件排序，取排序后的最新的n个记录
 func (b *Blog) FindAndSortBy(field string, n int) (r []Blog, err error) {
-	db, err := NewDBManager()
+	db, err := dbmgr.NewDBManager()
 	defer db.Close()
 
-	c := db.session.DB(Name).C(Blogs)
+	c := db.Session.DB(dbmgr.Name).C(dbmgr.Blogs)
+
 	type Items map[string]string
 	err = c.Find(nil).Sort(field).Limit(n).All(&r)
 
@@ -198,10 +200,10 @@ func (b *Blog) FindAndSortBy(field string, n int) (r []Blog, err error) {
 
 // FindByAndSortBy 查找所有记录， 按条件排序，取排序后的最新的n个记录
 func (b *Blog) FindByAndSortBy(t Type, field string, n int) (r []Blog, err error) {
-	db, err := NewDBManager()
+	db, err := dbmgr.NewDBManager()
 	defer db.Close()
 
-	c := db.session.DB(Name).C(Blogs)
+	c := db.Session.DB(dbmgr.Name).C(dbmgr.Blogs)
 	type Items map[string]string
 	err = c.Find(bson.M{"type": t}).Sort(field).Limit(n).All(&r)
 
@@ -211,11 +213,12 @@ func (b *Blog) FindByAndSortBy(t Type, field string, n int) (r []Blog, err error
 // FindAndSortByComments 按评论数量由大到小排序，取前n个记录
 // TODO: 数据太大时不能全部记录一次取出，资源耗费太大，需采取别的方式
 func (b *Blog) FindAndSortByComments(n int) (r []Blog, err error) {
-	db, err := NewDBManager()
+	db, err := dbmgr.NewDBManager()
 	defer db.Close()
 
+	c := db.Session.DB(dbmgr.Name).C(dbmgr.Blogs)
+
 	var d []Blog
-	c := db.session.DB(Name).C(Blogs)
 	type Items map[string]string
 	err = c.Find(nil).All(&d)
 
@@ -239,11 +242,12 @@ func (b *Blog) FindAndSortByComments(n int) (r []Blog, err error) {
 // FindByAndSortByComments 按评论数量由大到小排序，取前n个记录
 // TODO: 数据太大时不能全部记录一次取出，资源耗费太大，需采取别的方式
 func (b *Blog) FindByAndSortByComments(t Type, n int) (r []Blog, err error) {
-	db, err := NewDBManager()
+	db, err := dbmgr.NewDBManager()
 	defer db.Close()
 
+	c := db.Session.DB(dbmgr.Name).C(dbmgr.Blogs)
+
 	var d []Blog
-	c := db.session.DB(Name).C(Blogs)
 	type Items map[string]string
 	err = c.Find(bson.M{"type": t}).All(&d)
 
@@ -266,10 +270,10 @@ func (b *Blog) FindByAndSortByComments(t Type, n int) (r []Blog, err error) {
 
 // Update 修改
 func (b *Blog) Update(old, new Blog) error {
-	db, err := NewDBManager()
+	db, err := dbmgr.NewDBManager()
 	defer db.Close()
 
-	c := db.session.DB(Name).C(Blogs)
+	c := db.Session.DB(dbmgr.Name).C(dbmgr.Blogs)
 
 	err = c.Update(old, new)
 	if err != nil {
@@ -281,10 +285,10 @@ func (b *Blog) Update(old, new Blog) error {
 
 // Delete 删除
 func (b *Blog) Delete(id string) error {
-	db, err := NewDBManager()
+	db, err := dbmgr.NewDBManager()
 	defer db.Close()
 
-	c := db.session.DB(Name).C(Blogs)
+	c := db.Session.DB(dbmgr.Name).C(dbmgr.Blogs)
 	type Items map[string]string
 	err = c.Remove(bson.M{"id": id})
 	if err != nil {

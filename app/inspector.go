@@ -1,15 +1,15 @@
 package app
 
 import (
-	"log"
 	"lelv/app/controllers"
-	model "lelv/app/models"
+	"lelv/app/models/dbmgr"
+	"log"
 
 	"github.com/revel/revel"
 )
 
 func check(c *revel.Controller) revel.Result {
-	if c.Session["UserID"] != "" && c.Session["NickName"] != "" && c.Session["UserID"] != model.Guest {
+	if c.Session["UserID"] != "" && c.Session["NickName"] != "" && c.Session["UserID"] != dbmgr.Guest {
 		c.RenderArgs["UserID"] = c.Session["UserID"]
 		c.RenderArgs["NickName"] = c.Session["NickName"]
 		c.RenderArgs["Avatar"] = c.Session["Avatar"]
@@ -22,10 +22,10 @@ func check(c *revel.Controller) revel.Result {
 		return nil
 	}
 
-	if c.Session["UserID"] == model.Guest && (c.Action == "User.Watch" ||
+	if c.Session["UserID"] == dbmgr.Guest && (c.Action == "User.Watch" ||
 		c.Action == "User.Collect" || c.Action == "User.ConversationWith") {
 		log.Println("游客访问 " + c.Action)
-		c.RenderArgs["SigninedUserID"] = model.Guest
+		c.RenderArgs["SigninedUserID"] = dbmgr.Guest
 		return c.Redirect(controllers.User.SignIn)
 	}
 
@@ -36,12 +36,12 @@ func check(c *revel.Controller) revel.Result {
 		c.Action == "App.Articles" || c.Action == "App.Pictures" ||
 		c.Action == "App.About" {
 
-		c.RenderArgs["UserID"] = model.Guest
-		c.RenderArgs["NickName"] = model.Guest
-		c.RenderArgs["Avatar"] = model.Guest
-		c.Session["UserID"] = model.Guest
-		c.Session["NickName"] = model.Guest
-		c.Session["Avatar"] = model.Guest
+		c.RenderArgs["UserID"] = dbmgr.Guest
+		c.RenderArgs["NickName"] = dbmgr.Guest
+		c.RenderArgs["Avatar"] = dbmgr.Guest
+		c.Session["UserID"] = dbmgr.Guest
+		c.Session["NickName"] = dbmgr.Guest
+		c.Session["Avatar"] = dbmgr.Guest
 
 		log.Println("游客访问 " + c.Action)
 		return nil

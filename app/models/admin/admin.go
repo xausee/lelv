@@ -1,6 +1,7 @@
-package models
+package admin
 
 import (
+	"lelv/app/models/dbmgr"
 	"log"
 	"time"
 
@@ -41,10 +42,10 @@ const (
 
 // AddOrUpdate 新增或者更新
 func (b *HomeBlogID) AddOrUpdate(t BlogType, ids []string) error {
-	db, err := NewDBManager()
+	db, err := dbmgr.NewDBManager()
 	defer db.Close()
 
-	c := db.session.DB(Name).C(HomeBlogIDs)
+	c := db.Session.DB(dbmgr.Name).C(dbmgr.HomeBlogIDs)
 
 	if b.HasTodayRecord() {
 		old, err := b.FindByTimeStamp(time.Now().Format("2006-01-02"))
@@ -112,10 +113,10 @@ func (b *HomeBlogID) AddOrUpdate(t BlogType, ids []string) error {
 
 // FindByTimeStamp 根据时间戳查询
 func (b *HomeBlogID) FindByTimeStamp(t string) (HomeBlogID, error) {
-	db, err := NewDBManager()
+	db, err := dbmgr.NewDBManager()
 	defer db.Close()
 
-	c := db.session.DB(Name).C(HomeBlogIDs)
+	c := db.Session.DB(dbmgr.Name).C(dbmgr.HomeBlogIDs)
 
 	var hbi HomeBlogID
 	err = c.Find(bson.M{"timestamp": t}).One(&hbi)
@@ -125,10 +126,10 @@ func (b *HomeBlogID) FindByTimeStamp(t string) (HomeBlogID, error) {
 
 // GetLast 根据时间戳查询最新的记录
 func (b *HomeBlogID) GetLast() (HomeBlogID, error) {
-	db, err := NewDBManager()
+	db, err := dbmgr.NewDBManager()
 	defer db.Close()
 
-	c := db.session.DB(Name).C(HomeBlogIDs)
+	c := db.Session.DB(dbmgr.Name).C(dbmgr.HomeBlogIDs)
 
 	var ids HomeBlogID
 	err = c.Find(nil).Sort("-timestamp").Limit(1).One(&ids)
@@ -138,11 +139,12 @@ func (b *HomeBlogID) GetLast() (HomeBlogID, error) {
 
 // HasTodayRecord 是否有当天的编辑记录
 func (b *HomeBlogID) HasTodayRecord() bool {
-	db, err := NewDBManager()
+	db, err := dbmgr.NewDBManager()
 	defer db.Close()
 
+	c := db.Session.DB(dbmgr.Name).C(dbmgr.HomeBlogIDs)
+
 	has := false
-	c := db.session.DB(Name).C(HomeBlogIDs)
 	n, err := c.Find(bson.M{"timestamp": time.Now().Format("2006-01-02")}).Count()
 	if err != nil {
 		log.Println("查询当天编辑记录失败")

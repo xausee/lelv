@@ -1,4 +1,4 @@
-package models
+package dbmgr
 
 import (
 	"log"
@@ -21,7 +21,7 @@ const (
 
 // DBManager 数据库管理器
 type DBManager struct {
-	session *mgo.Session
+	Session *mgo.Session
 }
 
 // NewDBManager 创建数据库管理器对象
@@ -32,8 +32,8 @@ func NewDBManager() (*DBManager, error) {
 		revel.ERROR.Fatal("Cannot load database ip from app.conf")
 	}
 
-	session, err := mgo.Dial(uri)
-	log.Println(session)
+	Session, err := mgo.Dial(uri)
+	log.Println(Session)
 	if err != nil {
 		return nil, err
 	}
@@ -55,20 +55,20 @@ func NewDBManager() (*DBManager, error) {
 	// 	return nil, err
 	// }
 
-	return &DBManager{session}, nil
+	return &DBManager{Session}, nil
 }
 
 // SetDB 根据数据库名字，创建数据库连接
 func (manager *DBManager) SetDB(name string) *mgo.Database {
-	return manager.session.DB(name)
+	return manager.Session.DB(name)
 }
 
 // Coll 根据数据库表名，返回表对象
 func (manager *DBManager) Coll(name string) *mgo.Collection {
-	return manager.session.DB(Name).C(name)
+	return manager.Session.DB(Name).C(name)
 }
 
 // Close 关闭数据库
 func (manager *DBManager) Close() {
-	manager.session.Close()
+	manager.Session.Close()
 }
