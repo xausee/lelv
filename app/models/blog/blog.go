@@ -47,18 +47,18 @@ type Blog struct {
 }
 
 // Add 新增
-func (b Blog) Add(u Blog) error {
+func Add(b Blog) error {
 	db, err := dbmgr.NewDBManager()
 	defer db.Close()
 
 	c := db.Session.DB(dbmgr.Name).C(dbmgr.Blogs)
 
-	err = c.Insert(u)
+	err = c.Insert(b)
 	if err != nil {
-		log.Println("创建博客失败：{0}", u.Title)
+		log.Println("创建博客失败：", b.Title)
 		return err
 	}
-	log.Println("创建博客失败：{0}", u.Title)
+	log.Println("创建博客成功：", b.Title)
 
 	return nil
 }

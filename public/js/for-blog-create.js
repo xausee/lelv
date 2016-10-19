@@ -24,15 +24,25 @@ function PostBlog() {
         success: function(data) {
             var form = document.getElementById("BlogForm");
             form.style.display = "none";
-            var html = '<div class="alert alert-success text-center" role="alert"><br><br>\
+
+            if (data.indexOf("博客创建失败") == -1) {
+                var html = '<div class="alert alert-success text-center" role="alert"><br><br>\
             发布成功&nbsp;&nbsp;<a href=../Blog/View?id=' + data + '>查看</a>&nbsp;&nbsp;\
             <a href="">再写一篇</a><br><br><br></div>'
-            var info = document.getElementById("info");
-            info.innerHTML = html;
-            setCover = false;
-            // setTimeout(function() {
-            //     info.innerHTML = "";
-            // }, 1000 * 10);
+                var info = document.getElementById("info");
+                info.innerHTML = html;
+                setCover = false;
+            } else {
+                var html = '<div class="alert alert-danger text-center" role="alert"><br><br>\
+            发布失败&nbsp;&nbsp;' + data + '<a href="">重写一篇？</a><br><br><br></div>'
+                var info = document.getElementById("info");
+                info.innerHTML = html;
+                setCover = false;
+            }
+            setTimeout(function() {
+                info.innerHTML = "";
+
+            }, 1000 * 10);
         }
     });
 }

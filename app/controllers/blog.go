@@ -47,10 +47,11 @@ func (c Blog) PostBlog(b blog.Blog) revel.Result {
 		t = blog.Text
 	case "Hybrid":
 		t = blog.Hybrid
-
 	}
+
 	tags := strings.Split(c.Request.Form["tags"][0], ",")
 	pictures := strings.Split(c.Request.Form["pictures"][0], ",")
+
 	b = blog.Blog{
 		ID:                  conversation.CreateObjectID(),
 		AuthorID:            c.Session["UserID"],
@@ -63,9 +64,14 @@ func (c Blog) PostBlog(b blog.Blog) revel.Result {
 		Content:             c.Request.Form["content"][0],
 		Pictures:            pictures,
 		CreateTimeStamp:     time.Now().Format("2006-01-02 15:04:05"),
-		LastUpdateTimeStamp: time.Now().Format("2006-01-02 15:04:05")}
+		LastUpdateTimeStamp: time.Now().Format("2006-01-02 15:04:05"),
+	}
 
-	b.Add(b)
+	err := blog.Add(b)
+	if err != nil {
+		log.Println(err)
+		return c.RenderText("博客创建失败：" + err.Error())
+	}
 
 	return c.RenderText(b.ID)
 }
