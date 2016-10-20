@@ -31,8 +31,7 @@ func (c User) Home() revel.Result {
 		return c.Render()
 	}
 
-	b := blog.Blog{}
-	blogs, err := b.FindByAuthorID(id)
+	blogs, err := blog.FindByAuthorID(id)
 	if err != nil {
 		log.Println(err)
 		return c.Render()
@@ -64,8 +63,7 @@ func (c User) Index(idnum string) revel.Result {
 		return c.RenderText("该用户不存在，或者已经被注销")
 	}
 
-	b := blog.Blog{}
-	blogs, err := b.FindByAuthorID(idnum)
+	blogs, err := blog.FindByAuthorID(idnum)
 	if err != nil {
 		log.Println(err)
 		return c.RenderText(err.Error())
@@ -374,10 +372,9 @@ func (c User) Collection() revel.Result {
 		return c.Render(err)
 	}
 
-	b := blog.Blog{}
 	blogs := []blog.Blog{}
 	for _, id := range user.Collection {
-		blog, err := b.FindByID(id)
+		blog, err := blog.FindByID(id)
 		if err != nil {
 			log.Println(err)
 			return c.Render(err)
@@ -399,8 +396,7 @@ func (c User) AllBlogs() revel.Result {
 		id = c.Request.Form["UserID"][0]
 	}
 
-	b := blog.Blog{}
-	blogs, err := b.FindByAuthorID(id)
+	blogs, err := blog.FindByAuthorID(id)
 	if err != nil {
 		log.Println(err)
 		return c.Render()

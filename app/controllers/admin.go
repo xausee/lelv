@@ -27,8 +27,7 @@ func (c Admin) Home() revel.Result {
 
 // SearchForCarousel 站内搜索功能
 func (c Admin) SearchForCarousel(key string) revel.Result {
-	b := blog.Blog{}
-	bs, err := b.FindByTag(key)
+	bs, err := blog.FindByTag(key)
 	if err != nil {
 		log.Println(err)
 	}
@@ -40,8 +39,7 @@ func (c Admin) SearchForCarousel(key string) revel.Result {
 
 // SearchForModule 站内搜索功能
 func (c Admin) SearchForModule(key string) revel.Result {
-	b := blog.Blog{}
-	bs, err := b.FindByTag(key)
+	bs, err := blog.FindByTag(key)
 	if err != nil {
 		log.Println(err)
 	}

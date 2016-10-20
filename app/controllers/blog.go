@@ -81,7 +81,7 @@ func (c Blog) View(id string) revel.Result {
 	// 获取博客信息
 	b := blog.Blog{}
 	b.ID = id
-	blog, err := b.FindByID(id)
+	blog, err := blog.FindByID(id)
 	if err != nil {
 		log.Println("获取博客失败， ID：" + id)
 	}
@@ -131,7 +131,7 @@ func (c Blog) Edit(id string) revel.Result {
 	// 获取博客信息
 	b := blog.Blog{}
 	b.ID = id
-	blog, err := b.FindByID(id)
+	blog, err := blog.FindByID(id)
 	if err != nil {
 		log.Println("获取博客失败， ID：" + id)
 	}
@@ -158,7 +158,7 @@ func (c Blog) PostEdit() revel.Result {
 	id := c.Request.Form["id"][0]
 	b := blog.Blog{}
 	b.ID = id
-	OldBlog, err := b.FindByID(id)
+	OldBlog, err := blog.FindByID(id)
 	if err != nil {
 		log.Println("获取博客失败， ID：" + id)
 	}
@@ -202,7 +202,7 @@ func (c Blog) PostEdit() revel.Result {
 func (c Blog) Delete(id string) revel.Result {
 	b := blog.Blog{}
 
-	blog, err := b.FindByID(id)
+	blog, err := blog.FindByID(id)
 	if err != nil {
 		log.Println(err)
 		return c.RenderText("查找博客失败：" + err.Error())
@@ -244,7 +244,7 @@ func (c Blog) PostComment(comment blog.Comment) revel.Result {
 
 	b := blog.Blog{}
 	b.ID = blogID
-	blog, err := b.FindByID(blogID)
+	blog, err := blog.FindByID(blogID)
 	if err != nil {
 		log.Println(err)
 		return c.Render(err)

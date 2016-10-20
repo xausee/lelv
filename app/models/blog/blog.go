@@ -64,76 +64,76 @@ func Add(b Blog) error {
 }
 
 // FindByID 根据博客ID查找
-func (b *Blog) FindByID(id string) (blo Blog, err error) {
+func FindByID(id string) (b Blog, err error) {
 	db, err := dbmgr.NewDBManager()
 	defer db.Close()
 
 	c := db.Session.DB(dbmgr.Name).C(dbmgr.Blogs)
 
-	err = c.Find(bson.M{"id": id}).One(&blo)
+	err = c.Find(bson.M{"id": id}).One(&b)
 	if err != nil {
-		return blo, err
+		return b, err
 	}
 
-	return blo, nil
+	return b, nil
 }
 
 // FindByAuthorID 根据作者ID查找
-func (b *Blog) FindByAuthorID(id string) (blo []Blog, err error) {
+func FindByAuthorID(id string) (r []Blog, err error) {
 	db, err := dbmgr.NewDBManager()
 	defer db.Close()
 
 	c := db.Session.DB(dbmgr.Name).C(dbmgr.Blogs)
 
-	err = c.Find(bson.M{"authorid": id}).Sort("-createtimestamp").All(&blo)
+	err = c.Find(bson.M{"authorid": id}).Sort("-createtimestamp").All(&r)
 	if err != nil {
 		return nil, err
 	}
 
-	return blo, nil
+	return r, nil
 }
 
-// GetCountByAuthorID 根据作者ID查找
-func (b *Blog) GetCountByAuthorID(id string) (count int, err error) {
+// GetCountByAuthorID 根据作者ID获取其博客数量
+func GetCountByAuthorID(id string) (n int, err error) {
 	db, err := dbmgr.NewDBManager()
 	defer db.Close()
 
 	c := db.Session.DB(dbmgr.Name).C(dbmgr.Blogs)
 
-	count, err = c.Find(bson.M{"authorid": id}).Count()
+	n, err = c.Find(bson.M{"authorid": id}).Count()
 	if err != nil {
 		return 0, err
 	}
 
-	return count, nil
+	return n, nil
 }
 
 // FindByTag 根据博客标签查找
-func (b *Blog) FindByTag(tag string) (r []Blog, err error) {
+func FindByTag(tag string) (r []Blog, err error) {
 	db, err := dbmgr.NewDBManager()
 	defer db.Close()
 
 	c := db.Session.DB(dbmgr.Name).C(dbmgr.Blogs)
-	type Items map[string]string
+
 	err = c.Find(bson.M{"tags": tag}).Sort("-createtimestamp").Limit(100).All(&r)
 
 	return r, nil
 }
 
 // FindLast 查找最新的n个记录
-func (b *Blog) FindLast(n int) (r []Blog, err error) {
+func FindLast(n int) (r []Blog, err error) {
 	db, err := dbmgr.NewDBManager()
 	defer db.Close()
 
 	c := db.Session.DB(dbmgr.Name).C(dbmgr.Blogs)
-	type Items map[string]string
+
 	err = c.Find(nil).Sort("-createtimestamp").Limit(n).All(&r)
 
 	return r, nil
 }
 
 // Count 获取所有博客数量
-func (b *Blog) Count() (int, error) {
+func Count() (int, error) {
 	db, err := dbmgr.NewDBManager()
 	defer db.Close()
 
@@ -181,45 +181,43 @@ func (b *Blog) AddComment(comment Comment) error {
 
 // GetViewCount 更新阅读数量
 func (b *Blog) GetViewCount() int {
-	blog, _ := b.FindByID(b.ID)
+	blog, _ := FindByID(b.ID)
 	return blog.ViewCount
 }
 
 // FindAndSortBy 查找所有记录， 按条件排序，取排序后的最新的n个记录
-func (b *Blog) FindAndSortBy(field string, n int) (r []Blog, err error) {
+func FindAndSortBy(field string, n int) (r []Blog, err error) {
 	db, err := dbmgr.NewDBManager()
 	defer db.Close()
 
 	c := db.Session.DB(dbmgr.Name).C(dbmgr.Blogs)
 
-	type Items map[string]string
 	err = c.Find(nil).Sort(field).Limit(n).All(&r)
 
 	return r, nil
 }
 
 // FindByAndSortBy 查找所有记录， 按条件排序，取排序后的最新的n个记录
-func (b *Blog) FindByAndSortBy(t Type, field string, n int) (r []Blog, err error) {
+func FindByAndSortBy(t Type, field string, n int) (r []Blog, err error) {
 	db, err := dbmgr.NewDBManager()
 	defer db.Close()
 
 	c := db.Session.DB(dbmgr.Name).C(dbmgr.Blogs)
-	type Items map[string]string
+
 	err = c.Find(bson.M{"type": t}).Sort(field).Limit(n).All(&r)
 
 	return r, nil
 }
 
-// FindAndSortByComments 按评论数量由大到小排序，取前n个记录
+// FindALLSortByCommentsNum 按评论数量由大到小排序，取前n个记录
 // TODO: 数据太大时不能全部记录一次取出，资源耗费太大，需采取别的方式
-func (b *Blog) FindAndSortByComments(n int) (r []Blog, err error) {
+func FindALLSortByCommentsNum(n int) (r []Blog, err error) {
 	db, err := dbmgr.NewDBManager()
 	defer db.Close()
 
 	c := db.Session.DB(dbmgr.Name).C(dbmgr.Blogs)
 
 	var d []Blog
-	type Items map[string]string
 	err = c.Find(nil).All(&d)
 
 	for i := 0; i < len(d); i++ {
@@ -239,16 +237,15 @@ func (b *Blog) FindAndSortByComments(n int) (r []Blog, err error) {
 	return r, nil
 }
 
-// FindByAndSortByComments 按评论数量由大到小排序，取前n个记录
+// FindByTypeAndSortByCoNum 按评论数量由大到小排序，取前n个记录
 // TODO: 数据太大时不能全部记录一次取出，资源耗费太大，需采取别的方式
-func (b *Blog) FindByAndSortByComments(t Type, n int) (r []Blog, err error) {
+func FindByTypeAndSortByCoNum(t Type, n int) (r []Blog, err error) {
 	db, err := dbmgr.NewDBManager()
 	defer db.Close()
 
 	c := db.Session.DB(dbmgr.Name).C(dbmgr.Blogs)
 
 	var d []Blog
-	type Items map[string]string
 	err = c.Find(bson.M{"type": t}).All(&d)
 
 	for i := 0; i < len(d); i++ {

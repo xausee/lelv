@@ -39,7 +39,6 @@ func (c App) Home() revel.Result {
 		part3Left   []blog.Blog // 首页第三部分左边列表博客
 		part3Right  []blog.Blog // 首页第三部分右边列表博客
 	)
-	blog := blog.Blog{}
 
 	n := cn1 + cn2 + cn3
 	latestBlogs, err = blog.FindLast(n)
@@ -92,7 +91,7 @@ func (c App) Home() revel.Result {
 	}
 
 	// 评论排行榜取值
-	commentsBlogs, err := blog.FindAndSortByComments(cn5)
+	commentsBlogs, err := blog.FindALLSortByCommentsNum(cn5)
 	if err != nil {
 		log.Println(err)
 	}
@@ -110,8 +109,7 @@ func (c App) Home() revel.Result {
 
 // Search 站内搜索功能
 func (c App) Search(key string) revel.Result {
-	b := blog.Blog{}
-	bs, err := b.FindByTag(key)
+	bs, err := blog.FindByTag(key)
 	if err != nil {
 		log.Println(err)
 	}
@@ -137,21 +135,20 @@ func (c App) Pictures() revel.Result {
 		log.Println(err)
 	}
 
-	bl := blog.Blog{}
 	for _, id := range blogIds.PicturesBlogs {
-		b, err := bl.FindByID(id)
+		b, err := blog.FindByID(id)
 		if err != nil {
 			log.Println(err)
 		}
 		PicturesBlogs = append(PicturesBlogs, b)
 	}
 
-	viewCountBlogs, err := bl.FindByAndSortBy(blog.Picture, "-viewcount", 10)
+	viewCountBlogs, err := blog.FindByAndSortBy(blog.Picture, "-viewcount", 10)
 	if err != nil {
 		log.Println(err)
 	}
 
-	commentsBlogs, err := bl.FindByAndSortByComments(blog.Picture, 10)
+	commentsBlogs, err := blog.FindByTypeAndSortByCoNum(blog.Picture, 10)
 	if err != nil {
 		log.Println(err)
 	}
@@ -180,21 +177,20 @@ func (c App) Articles() revel.Result {
 		log.Println(err)
 	}
 
-	bl := blog.Blog{}
 	for _, id := range blogIds.ArticlesBlogs {
-		b, err := bl.FindByID(id)
+		b, err := blog.FindByID(id)
 		if err != nil {
 			log.Println(err)
 		}
 		ArticlesBlogs = append(ArticlesBlogs, b)
 	}
 
-	viewCountBlogs, err := bl.FindByAndSortBy(blog.Text, "-viewcount", 10)
+	viewCountBlogs, err := blog.FindByAndSortBy(blog.Text, "-viewcount", 10)
 	if err != nil {
 		log.Println(err)
 	}
 
-	commentsBlogs, err := bl.FindByAndSortByComments(blog.Text, 10)
+	commentsBlogs, err := blog.FindByTypeAndSortByCoNum(blog.Text, 10)
 	if err != nil {
 		log.Println(err)
 	}
@@ -212,16 +208,13 @@ func (c App) About() revel.Result {
 	return c.Render()
 }
 
-func getBlogByTags(tags []string) []blog.Blog {
-	mo := blog.Blog{}
-	var blogs []blog.Blog
-
+func getBlogByTags(tags []string) (bs []blog.Blog) {
 	for _, tag := range tags {
-		t, err := mo.FindByTag(tag)
+		t, err := blog.FindByTag(tag)
 		if err != nil {
 			log.Println(err)
 		}
-		blogs = append(blogs, t...)
+		bs = append(bs, t...)
 	}
-	return blogs
+	return
 }
