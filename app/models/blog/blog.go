@@ -163,29 +163,24 @@ func (b *Blog) UpdateView() {
 	c.Update(old, n)
 }
 
-// AddComment 更新阅读数量
+// AddComment 添加评论
 func (b *Blog) AddComment(comment Comment) error {
 	db, _ := dbmgr.NewDBManager()
 	defer db.Close()
 
 	c := db.Session.DB(dbmgr.Name).C(dbmgr.Blogs)
 
-	var old Blog
-	c.Find(bson.M{"id": b.ID}).One(&old)
+	var o Blog
+	c.Find(bson.M{"id": b.ID}).One(&o)
 
-	n := old
+	n := o
 	n.Comments = append(n.Comments, comment)
 
-	return c.Update(old, n)
-}
-
-// GetViewCount 更新阅读数量
-func (b *Blog) GetViewCount() int {
-	blog, _ := FindByID(b.ID)
-	return blog.ViewCount
+	return c.Update(o, n)
 }
 
 // FindAndSortBy 查找所有记录， 按条件排序，取排序后的最新的n个记录
+// field 排序条件
 func FindAndSortBy(field string, n int) (r []Blog, err error) {
 	db, err := dbmgr.NewDBManager()
 	defer db.Close()
@@ -198,6 +193,7 @@ func FindAndSortBy(field string, n int) (r []Blog, err error) {
 }
 
 // FindByAndSortBy 查找所有记录， 按条件排序，取排序后的最新的n个记录
+// field 排序条件
 func FindByAndSortBy(t Type, field string, n int) (r []Blog, err error) {
 	db, err := dbmgr.NewDBManager()
 	defer db.Close()
@@ -209,9 +205,9 @@ func FindByAndSortBy(t Type, field string, n int) (r []Blog, err error) {
 	return r, nil
 }
 
-// FindALLSortByCommentsNum 按评论数量由大到小排序，取前n个记录
+// FindALLSortByCoNum 按评论数量由大到小排序，取前n个记录
 // TODO: 数据太大时不能全部记录一次取出，资源耗费太大，需采取别的方式
-func FindALLSortByCommentsNum(n int) (r []Blog, err error) {
+func FindALLSortByCoNum(n int) (r []Blog, err error) {
 	db, err := dbmgr.NewDBManager()
 	defer db.Close()
 
@@ -265,8 +261,8 @@ func FindByTypeAndSortByCoNum(t Type, n int) (r []Blog, err error) {
 	return r, nil
 }
 
-// Update 修改
-func (b *Blog) Update(old, new Blog) error {
+// Update 修改博客
+func Update(old, new Blog) error {
 	db, err := dbmgr.NewDBManager()
 	defer db.Close()
 
@@ -280,13 +276,13 @@ func (b *Blog) Update(old, new Blog) error {
 	return nil
 }
 
-// Delete 删除
-func (b *Blog) Delete(id string) error {
+// Delete 删除博客
+func Delete(id string) error {
 	db, err := dbmgr.NewDBManager()
 	defer db.Close()
 
 	c := db.Session.DB(dbmgr.Name).C(dbmgr.Blogs)
-	type Items map[string]string
+
 	err = c.Remove(bson.M{"id": id})
 	if err != nil {
 		return err

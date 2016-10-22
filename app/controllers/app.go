@@ -91,7 +91,7 @@ func (c App) Home() revel.Result {
 	}
 
 	// 评论排行榜取值
-	commentsBlogs, err := blog.FindALLSortByCommentsNum(cn5)
+	commentsBlogs, err := blog.FindALLSortByCoNum(cn5)
 	if err != nil {
 		log.Println(err)
 	}

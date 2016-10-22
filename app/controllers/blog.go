@@ -189,7 +189,7 @@ func (c Blog) PostEdit() revel.Result {
 		editedblog.Cover = OldBlog.Cover
 	}
 
-	err = b.Update(OldBlog, editedblog)
+	err = blog.Update(OldBlog, editedblog)
 	if err != nil {
 		log.Println(err)
 		return c.RenderText("更新失败：" + err.Error())
@@ -200,16 +200,14 @@ func (c Blog) PostEdit() revel.Result {
 
 // Delete 删除博客
 func (c Blog) Delete(id string) revel.Result {
-	b := blog.Blog{}
-
-	blog, err := blog.FindByID(id)
+	a, err := blog.FindByID(id)
 	if err != nil {
 		log.Println(err)
 		return c.RenderText("查找博客失败：" + err.Error())
 	}
 
 	// 删除云存储上的博客图片
-	for _, p := range blog.Pictures {
+	for _, p := range a.Pictures {
 		if revel.RunMode == "dev" {
 			qiniumock.Delete(p)
 		} else {
@@ -218,7 +216,7 @@ func (c Blog) Delete(id string) revel.Result {
 	}
 
 	// 删除博客文本
-	err = b.Delete(id)
+	err = blog.Delete(id)
 	if err != nil {
 		log.Println(err)
 		return c.RenderText("删除失败：" + err.Error())
