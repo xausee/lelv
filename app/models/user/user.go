@@ -57,34 +57,29 @@ func (m *User) SignUp() error {
 }
 
 // SignIn 用户登录
-func (m *User) SignIn() error {
+func SignIn(nickName string, pwd []byte) (u *User, err error) {
 	db, err := dbmgr.NewDBManager()
 	defer db.Close()
 
 	c := db.Session.DB(dbmgr.Name).C(dbmgr.Users)
 
-	i, _ := c.Find(bson.M{"nickname": m.NickName}).Count()
-	if i == 0 {
-		err = errors.New("用户不存在")
-		return err
-	}
-
-	var u *User
-	c.Find(bson.M{"nickname": m.NickName}).One(&u)
-	err = bcrypt.CompareHashAndPassword(u.Password, m.Password)
+	i, err := c.Find(bson.M{"nickname": nickName}).Count()
 	if err != nil {
-		err = errors.New("密码不正确")
+		return nil, err
 	}
 
-	m.ID = u.ID
-	m.NickName = u.NickName
-	m.Email = u.Email
-	m.Gender = u.Gender
-	m.Password = u.Password
-	m.Avatar = u.Avatar
-	m.Introduction = u.Introduction
+	if i == 0 {
+		return nil, errors.New("用户不存在")
+	}
 
-	return nil
+	c.Find(bson.M{"nickname": nickName}).One(&u)
+
+	err = bcrypt.CompareHashAndPassword(u.Password, pwd)
+	if err != nil {
+		return nil, errors.New("密码不正确")
+	}
+
+	return u, nil
 }
 
 // Update 根据ID查找用户
@@ -94,20 +89,20 @@ func (m *User) Update() error {
 
 	c := db.Session.DB(dbmgr.Name).C(dbmgr.Users)
 
-	var oldUser User
-	err = c.Find(bson.M{"id": m.ID}).One(&oldUser)
+	var old User
+	err = c.Find(bson.M{"id": m.ID}).One(&old)
 	if err != nil {
 		return err
 	}
 
-	newuser := oldUser
-	newuser.ID = m.ID
-	newuser.NickName = m.NickName
-	newuser.Introduction = m.Introduction
-	newuser.Avatar = m.Avatar
-	newuser.LastUpdateTimeStamp = m.LastUpdateTimeStamp
+	new := old
+	new.ID = m.ID
+	new.NickName = m.NickName
+	new.Introduction = m.Introduction
+	new.Avatar = m.Avatar
+	new.LastUpdateTimeStamp = m.LastUpdateTimeStamp
 
-	err = c.Update(oldUser, newuser)
+	err = c.Update(old, new)
 	if err != nil {
 		return err
 	}
@@ -116,7 +111,7 @@ func (m *User) Update() error {
 }
 
 // FindByID 根据ID查找用户
-func (m *User) FindByID(id string) (u User, err error) {
+func FindByID(id string) (u User, err error) {
 	db, err := dbmgr.NewDBManager()
 	defer db.Close()
 

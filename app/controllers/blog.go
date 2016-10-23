@@ -2,11 +2,11 @@ package controllers
 
 import (
 	"lelv/app/models/blog"
-	"lelv/app/models/conversation"
 	"lelv/app/models/dbmgr"
 	"lelv/app/models/user"
 	qiniu "lelv/app/qiniu"
 	qiniumock "lelv/app/qiniumock"
+	"lelv/app/util"
 	"log"
 
 	"strings"
@@ -53,7 +53,7 @@ func (c Blog) PostBlog(b blog.Blog) revel.Result {
 	pictures := strings.Split(c.Request.Form["pictures"][0], ",")
 
 	b = blog.Blog{
-		ID:                  conversation.CreateObjectID(),
+		ID:                  util.CreateObjectID(),
 		AuthorID:            c.Session["UserID"],
 		Author:              c.Session["NickName"],
 		Tags:                tags,
@@ -88,8 +88,7 @@ func (c Blog) View(id string) revel.Result {
 
 	// 获取作者信息
 	aid := blog.AuthorID
-	u := user.User{}
-	author, err := u.FindByID(aid)
+	author, err := user.FindByID(aid)
 	if err != nil {
 		log.Println(err)
 		return c.Render()
@@ -97,7 +96,7 @@ func (c Blog) View(id string) revel.Result {
 
 	collected := false
 	if c.Session["UserID"] != "" && c.Session["UserID"] != dbmgr.Guest {
-		user, err := u.FindByID(c.Session["UserID"])
+		user, err := user.FindByID(c.Session["UserID"])
 		if err != nil {
 			log.Println(err)
 			return c.RenderText("查找用户失败")
@@ -227,8 +226,7 @@ func (c Blog) Delete(id string) revel.Result {
 
 // PostComment 发表评论, POST 数据处理
 func (c Blog) PostComment(comment blog.Comment) revel.Result {
-	u := user.User{}
-	user, err := u.FindByID(c.Session["UserID"])
+	user, err := user.FindByID(c.Session["UserID"])
 	if err != nil {
 		log.Println(err)
 		return c.Render(err)
@@ -248,7 +246,7 @@ func (c Blog) PostComment(comment blog.Comment) revel.Result {
 		return c.Render(err)
 	}
 
-	comment.ID = conversation.CreateObjectID()
+	comment.ID = util.CreateObjectID()
 	comment.CommenterID = c.Session["UserID"]
 	comment.CommenterAvatar = user.Avatar
 	comment.CommenterNickName = c.Session["NickName"]

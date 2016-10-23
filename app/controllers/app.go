@@ -25,8 +25,7 @@ func (c App) Home() revel.Result {
 	cn6 := 10 // 轮播博客数
 
 	// 轮播图博客取值
-	cb := csblog.CarouselBlog{}
-	carouselBlogs, err := cb.FindLast(cn6)
+	carouselBlogs, err := csblog.FindLast(cn6)
 	if err != nil {
 		log.Println(err)
 	}
@@ -128,9 +127,8 @@ func (c App) Pictures() revel.Result {
 	}
 
 	var PicturesBlogs []blog.Blog
-	hbls := admin.HomeBlogID{}
-	//blogIds, err := hbls.FindByTimeStamp(time.Now().Format("2006-01-02"))
-	blogIds, err := hbls.GetLast()
+	//blogIds, err := admin.FindByTimeStamp(time.Now().Format("2006-01-02"))
+	blogIds, err := admin.GetLast()
 	if err != nil {
 		log.Println(err)
 	}
@@ -170,9 +168,8 @@ func (c App) Articles() revel.Result {
 	}
 
 	var ArticlesBlogs []blog.Blog
-	hbls := admin.HomeBlogID{}
-	//blogIds, err := hbls.FindByTimeStamp(time.Now().Format("2006-01-02"))
-	blogIds, err := hbls.GetLast()
+	//blogIds, err := admin.FindByTimeStamp(time.Now().Format("2006-01-02"))
+	blogIds, err := admin.GetLast()
 	if err != nil {
 		log.Println(err)
 	}

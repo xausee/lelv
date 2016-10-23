@@ -60,19 +60,14 @@ func NewConversationDB() *ConversationDB {
 	return &ConversationDB{}
 }
 
-// CreateObjectID 创建一个唯一标识Id
-func CreateObjectID() string {
-	return bson.NewObjectId().Hex()
-}
-
 // Add 添加会话到数据库
-func (m ConversationDB) Add(conversation Conversation) error {
+func Add(cvs Conversation) error {
 	db, err := dbmgr.NewDBManager()
 	defer db.Close()
 
 	c := db.Session.DB(dbmgr.Name).C(dbmgr.Conversations)
 
-	err = c.Insert(conversation)
+	err = c.Insert(cvs)
 	if err != nil {
 		return err
 	}
@@ -81,41 +76,42 @@ func (m ConversationDB) Add(conversation Conversation) error {
 }
 
 // FindByID 根据会话id查找会话
-func (m ConversationDB) FindByID(id string) (con Conversation, err error) {
+func FindByID(id string) (cvs Conversation, err error) {
 	db, err := dbmgr.NewDBManager()
 	defer db.Close()
 
 	c := db.Session.DB(dbmgr.Name).C(dbmgr.Conversations)
 
-	err = c.Find(bson.M{"id": id}).One(&con)
+	err = c.Find(bson.M{"id": id}).One(&cvs)
 	if err != nil {
-		return con, err
+		return cvs, err
 	}
 
-	return con, nil
+	return cvs, nil
 }
 
 // AddMessage 给会话添加一条消息
-func (m *ConversationDB) AddMessage(conversionID string, msg Message) error {
+// cid 会话ID号
+func (m *ConversationDB) AddMessage(cid string, msg Message) error {
 	db, err := dbmgr.NewDBManager()
 	defer db.Close()
 
 	c := db.Session.DB(dbmgr.Name).C(dbmgr.Conversations)
 	var (
-		oldConver Conversation
-		newConver Conversation
+		old Conversation
+		new Conversation
 	)
 
-	err = c.Find(bson.M{"id": conversionID}).One(&oldConver)
+	err = c.Find(bson.M{"id": cid}).One(&old)
 	if err != nil {
 		log.Println(err)
 		return err
 	}
 
-	newConver = oldConver
-	newConver.Messages = append(newConver.Messages, msg)
+	new = old
+	new.Messages = append(new.Messages, msg)
 
-	err = c.Update(oldConver, newConver)
+	err = c.Update(old, new)
 	if err != nil {
 		log.Println(err)
 		return err
@@ -125,34 +121,35 @@ func (m *ConversationDB) AddMessage(conversionID string, msg Message) error {
 }
 
 // ClearMessageStatus 清除当前会话中所有消息的未读取状态
-func (m *ConversationDB) ClearMessageStatus(conversionID string) error {
+// cid 会话ID号
+func ClearMessageStatus(cid string) error {
 	db, err := dbmgr.NewDBManager()
 	defer db.Close()
 
 	c := db.Session.DB(dbmgr.Name).C(dbmgr.Conversations)
 	var (
-		oldConver Conversation
-		newConver Conversation
+		old Conversation
+		new Conversation
 	)
 
-	err = c.Find(bson.M{"id": conversionID}).One(&oldConver)
+	err = c.Find(bson.M{"id": cid}).One(&old)
 	if err != nil {
 		log.Println(err)
 		return err
 	}
 
-	newConver = oldConver
+	new = old
 	var messages = []Message{}
-	// 直接修改newConver.Messages也会改变oldConver.Messages的值？
-	// 而其他属性是不会改变到oldConver的
-	// 在此暂时使用newConver.Messages = append([]Message{}, messages...)的方式
-	for _, msg := range newConver.Messages {
+	// 直接修改new.Messages也会改变old.Messages的值？
+	// 而其他属性是不会改变到old的
+	// 在此暂时使用new.Messages = append([]Message{}, messages...)的方式
+	for _, msg := range new.Messages {
 		msg.To.Status = Read
 		messages = append(messages, msg)
 	}
-	newConver.Messages = append([]Message{}, messages...)
+	new.Messages = append([]Message{}, messages...)
 
-	err = c.Update(oldConver, newConver)
+	err = c.Update(old, new)
 	if err != nil {
 		log.Println(err)
 		return err

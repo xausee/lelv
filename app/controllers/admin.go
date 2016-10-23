@@ -89,8 +89,7 @@ func (c Admin) PostCarouselBlog() revel.Result {
 		b.Cover = qiniu.SPACE + key
 	}
 
-	log.Println(b)
-	b.Add()
+	csblog.Add(b)
 	return c.Render()
 }
 

@@ -14,7 +14,7 @@ type CarouselBlog struct {
 }
 
 // Add 新增
-func (b *CarouselBlog) Add() error {
+func Add(b CarouselBlog) error {
 	db, err := dbmgr.NewDBManager()
 	defer db.Close()
 
@@ -22,8 +22,7 @@ func (b *CarouselBlog) Add() error {
 
 	err = c.Insert(b)
 	if err != nil {
-		log.Println("创建博客失败：")
-		log.Println(b)
+		log.Println("创建博客失败： ", b.Title)
 		return err
 	}
 
@@ -31,12 +30,17 @@ func (b *CarouselBlog) Add() error {
 }
 
 // FindLast 查找最新的n个记录
-func (b *CarouselBlog) FindLast(n int) (r []CarouselBlog, err error) {
+func FindLast(n int) (r []CarouselBlog, err error) {
 	db, err := dbmgr.NewDBManager()
 	defer db.Close()
 
 	c := db.Session.DB(dbmgr.Name).C(dbmgr.CarouselBlogs)
+
 	err = c.Find(nil).Sort("-timestamp").Limit(n).All(&r)
+	if err != nil {
+		log.Println("查找博客失败： ", err.Error())
+		return nil, err
+	}
 
 	return r, nil
 }
