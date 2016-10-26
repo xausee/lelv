@@ -31,6 +31,7 @@ func (c Admin) CreateStaticHomePage() revel.Result {
 	// 服务器上路径
 	err := util.GetAndSaveHTML("http://localhost/forstatichome", "/src/lelv/app/views/StaticHome.html")
 	// 本地路径
+	//err := util.GetAndSaveHTML("http://localhost:9000/forstatichome", "/app/views/StaticHome.html")
 	if err != nil {
 		return c.RenderText(err.Error())
 	}
