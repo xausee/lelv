@@ -17,6 +17,11 @@ type App struct {
 
 // Home 首页
 func (c App) Home() revel.Result {
+	return c.Render()
+}
+
+// ForStaticHome 用来创建静态首页
+func (c App) ForStaticHome() revel.Result {
 	cn1 := 3  // 第一部分博客数
 	cn2 := 10 // 第二部分博客数
 	cn3 := 20 // 第三部分博客数

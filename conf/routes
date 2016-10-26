@@ -8,6 +8,7 @@ GET     /                                       App.Home
 GET     /pictures                               App.Pictures
 GET     /articles                               App.Articles
 GET     /about                                  App.About
+GET     /forstatichome                          App.ForStaticHome
 POST    /SearchResults                          App.Search
 
 GET     /admin                                  Admin.Home

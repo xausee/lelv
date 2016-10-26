@@ -5,6 +5,7 @@ import (
 	"lelv/app/models/blog"
 	"lelv/app/models/csblog"
 	"lelv/app/qiniu"
+	"lelv/app/util"
 	"log"
 	"os"
 	"strconv"
@@ -23,6 +24,17 @@ type Admin struct {
 func (c Admin) Home() revel.Result {
 
 	return c.Render()
+}
+
+// CreateStaticHomePage 创建静态首页文件
+func (c Admin) CreateStaticHomePage() revel.Result {
+	err := util.GetAndSaveHTML("http://localhost:9000/forstatichome", "/app/views/StaticHome.html")
+	//err := util.GetAndSaveHTML("http://www.baidu.com", "/app/views/StaticHome.html")
+	if err != nil {
+		return c.RenderText(err.Error())
+	}
+
+	return c.RenderText("生成静态首页成功！")
 }
 
 // SearchForCarousel 站内搜索功能
