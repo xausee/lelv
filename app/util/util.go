@@ -47,7 +47,6 @@ func GetAndSaveHTML(url, fn string) error {
 
 	// 往创建的文件中写入内容
 	_, err = file1.WriteString(bodystr)
-	log.Println(bodystr)
 	if err != nil {
 		log.Println(err)
 		return err
