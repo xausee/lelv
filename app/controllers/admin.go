@@ -28,8 +28,9 @@ func (c Admin) Home() revel.Result {
 
 // CreateStaticHomePage 创建静态首页文件
 func (c Admin) CreateStaticHomePage() revel.Result {
-	err := util.GetAndSaveHTML("http://localhost:9000/forstatichome", "/app/views/StaticHome.html")
-	//err := util.GetAndSaveHTML("http://www.baidu.com", "/app/views/StaticHome.html")
+	// 服务器上路径
+	err := util.GetAndSaveHTML("http://localhost/forstatichome", "/src/lelv/app/views/StaticHome.html")
+	// 本地路径
 	if err != nil {
 		return c.RenderText(err.Error())
 	}
