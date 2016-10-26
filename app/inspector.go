@@ -32,7 +32,7 @@ func check(c *revel.Controller) revel.Result {
 	if c.Action == "User.SignIn" || c.Action == "User.PostSignIn" || c.Action == "User.AllBlogs" ||
 		c.Action == "User.SignUp" || c.Action == "User.PostSignUp" ||
 		c.Action == "User.Index" || c.Action == "User.SignOut" || c.Action == "User.Fans" ||
-		c.Action == "Blog.View" || c.Action == "App.Home" || c.Action == "App.ForStaticHome" ||
+		c.Action == "Blog.View" || c.Action == "App.Home" || c.Action == "App.DynamicHome" ||
 		c.Action == "App.Articles" || c.Action == "App.Pictures" ||
 		c.Action == "App.About" {
 

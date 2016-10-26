@@ -28,12 +28,18 @@ func (c Admin) Home() revel.Result {
 
 // CreateStaticHomePage 创建静态首页文件
 func (c Admin) CreateStaticHomePage() revel.Result {
-	// 服务器上路径
-	err := util.GetAndSaveHTML("http://localhost/forstatichome", "/src/lelv/app/views/StaticHome.html")
-	// 本地路径
-	//err := util.GetAndSaveHTML("http://localhost:9000/forstatichome", "/app/views/StaticHome.html")
-	if err != nil {
-		return c.RenderText(err.Error())
+	if revel.RunMode == "dev" {
+		// 本地路径
+		err := util.GetAndSaveHTML("http://localhost:9000/dynamichome", "/app/views/StaticHome.html")
+		if err != nil {
+			return c.RenderText(err.Error())
+		}
+	} else {
+		// 服务器上路径
+		err := util.GetAndSaveHTML("http://localhost/dynamichome", "/src/lelv/app/views/StaticHome.html")
+		if err != nil {
+			return c.RenderText(err.Error())
+		}
 	}
 
 	return c.RenderText("生成静态首页成功！")
