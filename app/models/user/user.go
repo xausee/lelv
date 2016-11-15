@@ -18,6 +18,17 @@ type MockUser struct {
 	ConfirmPassword string // 校验密码
 }
 
+// Role 用户角色
+type Role int
+
+// 用户角色列表
+const (
+	Super  Role = iota // 超级用户
+	Admin              // 管理员
+	RgUser             // 普通注册用户
+	Guest              // 游客
+)
+
 // User 用户数据结构
 type User struct {
 	ID                  string   // ID号
@@ -25,6 +36,7 @@ type User struct {
 	Email               string   // 邮箱
 	Gender              string   // 性别
 	Password            []byte   // 密码
+	Role                Role     // 用户权限类型
 	Avatar              string   // 头像地址
 	Introduction        string   // 自我介绍
 	Fans                []string // 粉丝ID集

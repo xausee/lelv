@@ -9,6 +9,7 @@ import (
 	"lelv/app/util"
 	"log"
 	"os"
+	"strconv"
 	"strings"
 	"time"
 
@@ -237,7 +238,12 @@ func (c User) PostSignUp(mockuser user.MockUser) revel.Result {
 		Avatar:          avatar,
 		Introduction:    "这家伙有点懒，没有留下一点信息...",
 		Password:        p,
+		Role:            user.RgUser,
 		CreateTimeStamp: time.Now().Format("2006-01-02 15:04:05"),
+	}
+
+	if u.NickName == "狂赞士之怒" {
+		u.Role = user.Super
 	}
 
 	u.ID = util.CreateObjectID()
@@ -310,11 +316,13 @@ func (c User) PostSignIn(mockuser user.MockUser) revel.Result {
 	c.Session["UserID"] = u.ID
 	c.Session["NickName"] = u.NickName
 	c.Session["Avatar"] = u.Avatar
+	c.Session["Role"] = strconv.Itoa((int)(u.Role))
 	c.RenderArgs["UserID"] = u.ID
 	c.RenderArgs["NickName"] = u.NickName
 	c.RenderArgs["Avatar"] = u.Avatar
 
-	if c.Session["NickName"] == "狂赞士之怒" {
+	// 超级用户和管理员登陆后直接跳到管理后台页面
+	if u.Role == user.Super || u.Role == user.Admin {
 		return c.Redirect(Admin.Home)
 	}
 

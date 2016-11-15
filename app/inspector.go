@@ -3,16 +3,37 @@ package app
 import (
 	"lelv/app/controllers"
 	"lelv/app/models/dbmgr"
+	"lelv/app/models/user"
 	"log"
+
+	"strconv"
 
 	"github.com/revel/revel"
 )
 
 func check(c *revel.Controller) revel.Result {
-	if c.Session["UserID"] != "" && c.Session["NickName"] != "" && c.Session["UserID"] != dbmgr.Guest {
+	if c.Session["UserID"] != "" && c.Session["NickName"] != "" &&
+		c.Session["Role"] != "" && c.Session["UserID"] != dbmgr.Guest {
+
 		c.RenderArgs["UserID"] = c.Session["UserID"]
 		c.RenderArgs["NickName"] = c.Session["NickName"]
 		c.RenderArgs["Avatar"] = c.Session["Avatar"]
+		c.RenderArgs["Role"] = c.Session["Role"]
+
+		if c.Action == "Admin.Home" {
+			i, err := strconv.Atoi(c.Session["Role"])
+			if err != nil {
+				log.Println(err)
+				return c.Redirect(controllers.App.Home)
+			}
+
+			if i == (int)(user.Super) || i == (int)(user.Admin) {
+				return nil
+			}
+
+			log.Println("用户 " + c.Session["NickName"] + " 尝试访问未授权Admin页面，自动跳转到首页")
+			return c.Redirect(controllers.App.Home)
+		}
 
 		count := controllers.GetUnreadMsgCount(c.Session["UserID"])
 		if count > 0 {
