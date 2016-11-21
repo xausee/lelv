@@ -5,6 +5,8 @@
 <head>
     <title>{{.title}}</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <!--百度分享验证-->
+    <meta name="baidu-site-verification" content="ce6088426dfabb7bc2ff6e7f51b87dc5" />
     <link rel="shortcut icon" type="image/png" href="/public/img/favicon.png">
 
     <!-- 新 Bootstrap 核心 CSS 文件 -->
@@ -20,11 +22,10 @@
     <script src="//cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 
     <!--自定义a link的样式-->
-    <link rel="stylesheet" href="../public/css/link.css">
-
-    {{range .moreStyles}}
+    <link rel="stylesheet" href="../public/css/link.css"> {{range .moreStyles}}
     <link rel="stylesheet" type="text/css" href="/public/{{.}}"> {{end}} {{range .moreScripts}}
     <script src="/public/{{.}}" type="text/javascript" charset="utf-8"></script>
     {{end}}
 </head>
+
 <body>

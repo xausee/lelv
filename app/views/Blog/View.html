@@ -56,7 +56,9 @@
                     {{end}}
 
                     <div class="caption">
-                        <h3 class="text-center">{{.Blog.Title}}</h3> {{.Blog.Content}}
+                        <h3 class="text-center">{{.Blog.Title}}</h3>
+                        <p id="BriefText" style="display:none">{{.Blog.BriefText}}</p>
+                        {{.Blog.Content}}
                         <p class="text-right">
                             <small>{{.Blog.CreateTimeStamp}}</small>
                         </p>
@@ -86,15 +88,21 @@
                             <a href="#" class="bds_more" data-cmd="more">更多分享</a>
                         </div>
                         <script>
+                            var brieftext = document.getElementById("BriefText").textContent;
+                            if (brieftext == "") {
+                                brieftext = "乐旅博客网，一个专门分享旅行图片和游记的网站，独乐了不如众乐乐，一起来分享你的旅行吧！"
+                            }
                             window._bd_share_config = {
                                 "common": {
                                     "bdSnsKey": {},
-                                    "bdText": "",
+                                    // "bdText": "",
                                     "bdMini": "2",
                                     "bdMiniList": false,
                                     "bdPic": "",
                                     "bdStyle": "0",
-                                    "bdSize": "16"
+                                    "bdSize": "16",
+                                    "bdText": brieftext,
+                                    "bdDesc": brieftext
                                 },
                                 "share": {
                                     "bdSize": 16
@@ -146,7 +154,6 @@
                         <input id="BlogIDForComment" name="BlogIDForComment" value="{{.Blog.ID}}" type="hidden"> {{with $field := field "comment.Body" .}}
                         <div class="form-group {{$field.ErrorClass}}">
                             <div class="col-sm-10">
-                                <textarea class="form-control" id="{{$field.Id}}" name="{{$field.Name}}" value="{{$field.Flash}}" rows="1" {{if eq $User "Guest"}}data-toggle="modal" data-target="#myModal" {{end}}></textarea> {{if $field.Error}}
                                 <span class="help-inline text-danger">{{$field.Error}}</span> {{end}}
                             </div>
                             <div class="col-sm-2">
