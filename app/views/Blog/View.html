@@ -154,6 +154,7 @@
                         <input id="BlogIDForComment" name="BlogIDForComment" value="{{.Blog.ID}}" type="hidden"> {{with $field := field "comment.Body" .}}
                         <div class="form-group {{$field.ErrorClass}}">
                             <div class="col-sm-10">
+                                <textarea class="form-control" id="{{$field.Id}}" name="{{$field.Name}}" value="{{$field.Flash}}" rows="1" placeholder="据说帅哥美女都来这里评论了..." {{if eq $User "Guest"}}data-toggle="modal" data-target="#myModal" {{end}}></textarea>                                {{if $field.Error}}
                                 <span class="help-inline text-danger">{{$field.Error}}</span> {{end}}
                             </div>
                             <div class="col-sm-2">
