@@ -4,7 +4,8 @@
 
 module:testrunner
 
-GET     /                                       App.Home
+# GET     /                                       App.Home
+GET     /                                       App.DynamicHome
 GET     /pictures                               App.Pictures
 GET     /articles                               App.Articles
 GET     /about                                  App.About
