@@ -20,7 +20,7 @@
                 {{with $field := field "blog.Title" .}}
                 <div class="form-group {{$field.ErrorClass}}">
                     <div class="col-sm-12">
-                        <input type="text" class="form-control" id="{{$field.Id}}" name="{{$field.Name}}" value="{{$field.Flash}}" placeholder="标题">                        {{if $field.Error}}
+                        <input type="text" class="form-control" id="{{$field.ID}}" name="{{$field.Name}}" value="{{$field.Flash}}" placeholder="标题">                        {{if $field.Error}}
                         <span class="help-inline text-danger">{{$field.Error}}</span> {{end}}
                     </div>
                 </div>

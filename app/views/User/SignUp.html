@@ -13,9 +13,9 @@
             <form class="form-horizontal" role="form" action={{url "User.PostSignUp"}} method="POST">
                 <!--{{with $field := field "mockuser.Email" .}}
                 <div class="form-group {{$field.ErrorClass}}">
-                    <label class="col-sm-2 control-label" for="{{$field.Id}}">电子邮件</label>
+                    <label class="col-sm-2 control-label" for="{{$field.ID}}">电子邮件</label>
                     <div class="col-sm-10">
-                        <input type="email" class="form-control" id="{{$field.Id}}" name="{{$field.Name}}" value="{{$field.Flash}}" placeholder="电子邮件"
+                        <input type="email" class="form-control" id="{{$field.ID}}" name="{{$field.Name}}" value="{{$field.Flash}}" placeholder="电子邮件"
                         required> {{if $field.Error}}
                         <span class="help-inline">{{$field.Error}}</span> {{end}}
                     </div>
@@ -23,26 +23,26 @@
                 {{end}}-->
                 {{with $field := field "mockuser.NickName" .}}
                 <div class="form-group {{$field.ErrorClass}}">
-                    <label class="col-sm-2 control-label" for="{{$field.Id}}">昵称</label>
+                    <label class="col-sm-2 control-label" for="{{$field.ID}}">昵称</label>
                     <div class="col-sm-10">
-                        <input type="text" class="form-control" id="{{$field.Id}}" name="{{$field.Name}}" value="{{$field.Flash}}" placeholder="昵称作为登录账号，一旦注册不能修改"> {{if $field.Error}}
+                        <input type="text" class="form-control" id="{{$field.ID}}" name="{{$field.Name}}" value="{{$field.Flash}}" placeholder="昵称作为登录账号，一旦注册不能修改"> {{if $field.Error}}
                         <span class="help-inline text-danger">{{$field.Error}}</span> {{end}}
                         <!--<span class="help-inline text-info">提示：请精心取好昵称，一旦注册了就不能改了哟</span>-->
                     </div>
                 </div>
                 {{end}} {{with $field := field "mockuser.Password" .}}
                 <div class="form-group {{$field.ErrorClass}}">
-                    <label class="col-sm-2 control-label" for="{{$field.Id}}">密码</label>
+                    <label class="col-sm-2 control-label" for="{{$field.ID}}">密码</label>
                     <div class="col-sm-10">
-                        <input type="password" class="form-control" id="{{$field.Id}}" name="{{$field.Name}}" value="{{$field.Flash}}" placeholder="密码"> {{if $field.Error}}
+                        <input type="password" class="form-control" id="{{$field.ID}}" name="{{$field.Name}}" value="{{$field.Flash}}" placeholder="密码"> {{if $field.Error}}
                         <span class="help-inline text-danger">{{$field.Error}}</span> {{end}}
                     </div>
                 </div>
                 {{end}} {{with $field := field "mockuser.ConfirmPassword" .}}
                 <div class="form-group {{$field.ErrorClass}}">
-                    <label class="col-sm-2 control-label" for="{{$field.Id}}">确认密码</label>
+                    <label class="col-sm-2 control-label" for="{{$field.ID}}">确认密码</label>
                     <div class="col-sm-10">
-                        <input type="password" class="form-control" id="{{$field.Id}}" name="{{$field.Name}}" value="{{$field.Flash}}" placeholder="确认密码"> {{if $field.Error}}
+                        <input type="password" class="form-control" id="{{$field.ID}}" name="{{$field.Name}}" value="{{$field.Flash}}" placeholder="确认密码"> {{if $field.Error}}
                         <span class="help-inline text-danger">{{$field.Error}}</span> {{end}}
                     </div>
                 </div>
