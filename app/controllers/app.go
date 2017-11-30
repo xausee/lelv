@@ -99,15 +99,24 @@ func (c App) DynamicHome() revel.Result {
 	if err != nil {
 		log.Println(err)
 	}
-	c.RenderArgs["ViewCountBlogs"] = viewCountBlogs
-	c.RenderArgs["CommentsBlogs"] = commentsBlogs
-	c.RenderArgs["CarouselBlog"] = carouselBlogs
-	c.RenderArgs["Part1Blogs"] = part1
-	c.RenderArgs["Part2LeftBlogs"] = part2Left
-	c.RenderArgs["Part2RightBlogs"] = part2Right
-	c.RenderArgs["Part3LeftBlogs"] = part3Left
-	c.RenderArgs["Part3RightBlogs"] = part3Right
 
+	ViewCountBlogs := viewCountBlogs
+	CommentsBlogs := commentsBlogs
+	CarouselBlog := carouselBlogs
+	Part1Blogs:= part1
+	Part2LeftBlogs:= part2Left
+	Part2RightBlogs:= part2Right
+	Part3LeftBlogs:= part3Left
+	Part3RightBlogs:= part3Right
+
+	c.Render(ViewCountBlogs)
+	c.Render(CommentsBlogs)
+	c.Render(CarouselBlog)
+	c.Render(Part1Blogs)
+	c.Render(Part2LeftBlogs)
+	c.Render(Part2RightBlogs)
+	c.Render(Part3LeftBlogs)
+	c.Render(Part3RightBlogs)
 	return c.Render()
 }
 
@@ -118,8 +127,8 @@ func (c App) Search(key string) revel.Result {
 		log.Println(err)
 	}
 
-	c.RenderArgs["Blogs"] = bs
-
+	Blogs:=bs
+	c.Render(Blogs)
 	return c.Render()
 }
 
@@ -155,11 +164,14 @@ func (c App) Pictures() revel.Result {
 	if err != nil {
 		log.Println(err)
 	}
-	c.RenderArgs["ViewCountBlogs"] = viewCountBlogs
-	c.RenderArgs["CommentsBlogs"] = commentsBlogs
 
-	c.RenderArgs["PicturesBlogs"] = PicturesBlogs
-	c.RenderArgs["FamousUsers"] = FamousUsers
+	ViewCountBlogs:= viewCountBlogs
+	CommentsBlogs:= commentsBlogs
+
+	c.Render(ViewCountBlogs)
+	c.Render(CommentsBlogs)
+	c.Render(PicturesBlogs)
+	c.Render(FamousUsers)
 
 	return c.Render()
 }
@@ -196,13 +208,14 @@ func (c App) Articles() revel.Result {
 	if err != nil {
 		log.Println(err)
 	}
-	c.RenderArgs["ViewCountBlogs"] = viewCountBlogs
-	c.RenderArgs["CommentsBlogs"] = commentsBlogs
+	ViewCountBlogs:= viewCountBlogs
+	CommentsBlogs:= commentsBlogs
 
-	c.RenderArgs["ArticlesBlogs"] = ArticlesBlogs
-	c.RenderArgs["FamousUsers"] = FamousUsers
+	c.Render(CommentsBlogs)
+	c.Render(ViewCountBlogs)
+	c.Render(CommentsBlogs)
 
-	return c.Render()
+	return c.Render(FamousUsers)
 }
 
 // About 关于和联系我们

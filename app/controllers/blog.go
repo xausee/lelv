@@ -25,13 +25,15 @@ func (c Blog) Create() revel.Result {
 	if revel.RunMode == "dev" {
 		token := qiniumock.CreatUpToken()
 		log.Println("生成七牛上传凭证：" + token)
-		c.RenderArgs["UpToken"] = token
-		c.RenderArgs["CDN"] = qiniumock.SPACE
+		UpToken:=token
+		CDN:=qiniumock.SPACE
+		c.Render(UpToken,CDN)
 	} else {
 		token := qiniu.CreatUpToken()
 		log.Println("生成七牛上传凭证：" + token)
-		c.RenderArgs["UpToken"] = token
-		c.RenderArgs["CDN"] = qiniu.CDN
+		UpToken:=token
+		CDN:=qiniu.CDN
+		c.Render(UpToken,CDN)
 	}
 
 	return c.Render()
@@ -114,15 +116,15 @@ func (c Blog) View(id string) revel.Result {
 	}
 
 	b.UpdateView()
-	c.RenderArgs["ViewCount"] = blog.ViewCount
-	c.RenderArgs["Collected"] = collected
-	c.RenderArgs["Author"] = author
-	c.RenderArgs["IsAuthor"] = isAuthor
-	c.RenderArgs["Blog"] = blog
+	ViewCount:= blog.ViewCount
+	Collected:= collected
+	Author:= author
+	IsAuthor:= isAuthor
+	Blog:= blog
 
-	c.RenderArgs["SigninedUserID"] = c.Session["UserID"]
+	SigninedUserID:= c.Session["UserID"]
 
-	return c.Render()
+	return c.Render(ViewCount,Collected,Author,IsAuthor,Blog,SigninedUserID)
 }
 
 // Edit 编辑博客
@@ -138,17 +140,19 @@ func (c Blog) Edit(id string) revel.Result {
 	if revel.RunMode == "dev" {
 		token := qiniumock.CreatUpToken()
 		log.Println("生成七牛上传凭证：" + token)
-		c.RenderArgs["UpToken"] = token
-		c.RenderArgs["CDN"] = qiniumock.SPACE
+		UpToken:=token
+		CDN:=qiniumock.SPACE
+		c.Render(UpToken,CDN)
 	} else {
 		token := qiniu.CreatUpToken()
 		log.Println("生成七牛上传凭证：" + token)
-		c.RenderArgs["UpToken"] = token
-		c.RenderArgs["CDN"] = qiniu.CDN
+		UpToken:=token
+		CDN:=qiniu.CDN
+		c.Render(UpToken,CDN)
 	}
 
-	c.RenderArgs["Blog"] = blog
-	return c.Render()
+Blog:= blog
+	return c.Render(Blog)
 }
 
 // PostEdit 编辑博客 Post请求

@@ -42,15 +42,15 @@ func (c User) Home() revel.Result {
 		blog.Content = ""
 	}
 
-	c.RenderArgs["User"] = user
-	c.RenderArgs["Blogs"] = blogs
-	c.RenderArgs["BlogsCount"] = len(blogs)
-	c.RenderArgs["CollectionCount"] = len(user.Collection)
-	c.RenderArgs["FansCount"] = len(user.Fans)
-	c.RenderArgs["WatchCount"] = len(user.Watches)
-	c.RenderArgs["ConversationCount"] = len(user.ConversationIDs)
+	User := user
+	Blogs := blogs
+	BlogsCount := len(blogs)
+	CollectionCount := len(user.Collection)
+	FansCount := len(user.Fans)
+	WatchCount := len(user.Watches)
+	ConversationCount := len(user.ConversationIDs)
 
-	return c.Render()
+	return c.Render(User, Blogs, BlogsCount, CollectionCount, FansCount, WatchCount, ConversationCount)
 }
 
 // Index 用户对其它用户开放的首页
@@ -90,16 +90,16 @@ func (c User) Index(idnum string) revel.Result {
 		}
 	}
 
-	c.RenderArgs["User"] = us
-	c.RenderArgs["Blogs"] = blogs
-	c.RenderArgs["BlogsCount"] = len(blogs)
-	c.RenderArgs["FansCount"] = len(us.Fans)
-	c.RenderArgs["WatchCount"] = len(us.Watches)
-	c.RenderArgs["Watched"] = watched
+	User := us
+	Blogs := blogs
+	BlogsCount := len(blogs)
+	FansCount := len(us.Fans)
+	WatchCount := len(us.Watches)
+	Watched := watched
 
-	c.RenderArgs["SigninedUserID"] = sid
+	SigninedUserID := sid
 
-	return c.Render()
+	return c.Render(User, Blogs, BlogsCount, FansCount, WatchCount, Watched, SigninedUserID)
 }
 
 // Avatar 用户修改资料页面控制器
@@ -120,10 +120,10 @@ func (c User) Profile() revel.Result {
 	token := qiniu.CreatUpToken()
 	log.Println("生成七牛上传凭证：" + token)
 
-	c.RenderArgs["UpToken"] = token
-	c.RenderArgs["User"] = user
+	UpToken := token
+	User := user
 
-	return c.Render()
+	return c.Render(UpToken, User)
 }
 
 // PostProfile 用户修改资料Post请求控制器
@@ -268,10 +268,10 @@ func (c User) PostSignUp(mockuser user.MockUser) revel.Result {
 
 // SignIn 用户登录页
 func (c User) SignIn(redirect string) revel.Result {
-
 	log.Println(redirect)
 	if redirect != "" {
-		c.RenderArgs["RedirectTo"] = redirect
+		RedirectTo := redirect
+		c.Render(RedirectTo)
 	}
 
 	return c.Render()
@@ -317,9 +317,12 @@ func (c User) PostSignIn(mockuser user.MockUser) revel.Result {
 	c.Session["NickName"] = u.NickName
 	c.Session["Avatar"] = u.Avatar
 	c.Session["Role"] = strconv.Itoa((int)(u.Role))
-	c.RenderArgs["UserID"] = u.ID
-	c.RenderArgs["NickName"] = u.NickName
-	c.RenderArgs["Avatar"] = u.Avatar
+	UserID := u.ID
+	NickName := u.NickName
+	Avatar := u.Avatar
+	c.ViewArgs["UserID"] = UserID
+	c.ViewArgs["NickName"] = NickName
+	c.ViewArgs["Avatar"] = Avatar
 
 	// 超级用户和管理员登陆后直接跳到管理后台页面
 	if u.Role == user.Super || u.Role == user.Admin {
@@ -391,8 +394,8 @@ func (c User) Collection() revel.Result {
 		blogs = append(blogs, blog)
 	}
 
-	c.RenderArgs["Blogs"] = blogs
-	return c.Render()
+	Blogs := blogs
+	return c.Render(Blogs)
 }
 
 // AllBlogs 获取所有博客
@@ -416,9 +419,9 @@ func (c User) AllBlogs() revel.Result {
 		blog.Content = ""
 	}
 
-	c.RenderArgs["Blogs"] = blogs
+	Blogs := blogs
 
-	return c.Render()
+	return c.Render(Blogs)
 }
 
 // Watch 关注某个用户
@@ -486,9 +489,9 @@ func (c User) Watches() revel.Result {
 		watches = append(watches, f)
 	}
 
-	c.RenderArgs["Watches"] = watches
+	Watches := watches
 
-	return c.Render()
+	return c.Render(Watches)
 }
 
 // Fans 获取所有的粉丝信息
@@ -513,9 +516,9 @@ func (c User) Fans() revel.Result {
 		fans = append(fans, f)
 	}
 
-	c.RenderArgs["Fans"] = fans
+	Fans := fans
 
-	return c.Render()
+	return c.Render(Fans)
 }
 
 // ConversationWith 给某个用户发私信会话
@@ -624,9 +627,8 @@ func (c User) Conversation(id string) revel.Result {
 
 	conversation.ClearMessageStatus(id)
 
-	c.RenderArgs["Conversation"] = conver
-	c.RenderArgs["UserID"] = c.Session["UserID"]
-	c.RenderArgs["RemoteUserNickName"] = RemoteUserNickName
+	Conversation := conver
+	UserID := c.Session["UserID"]
 
 	c.Session["LocalUserID"] = LocalUserID
 	c.Session["LocalUserAvatar"] = LocalUserAvatar
@@ -635,7 +637,7 @@ func (c User) Conversation(id string) revel.Result {
 	c.Session["RemoteUserAvatar"] = RemoteUserAvatar
 	c.Session["RemoteUserNickName"] = RemoteUserNickName
 
-	return c.Render()
+	return c.Render(Conversation, UserID, RemoteUserNickName)
 }
 
 // PostMessage 私信会话中发送单条消息, POST 数据处理
@@ -705,9 +707,9 @@ func (c User) Conversations() revel.Result {
 		}
 	}
 
-	c.RenderArgs["Conversations"] = conversations
+	Conversations := conversations
 
-	return c.Render()
+	return c.Render(Conversations)
 }
 
 // UnreadConversations 获取所有包含有未读消息的会话
@@ -739,10 +741,10 @@ func (c User) UnreadConversations() revel.Result {
 		}
 	}
 
-	c.RenderArgs["Conversations"] = conversations
-	c.RenderArgs["TotalUnread"] = totalUnreadCount
+	Conversations := conversations
+	TotalUnread := totalUnreadCount
 
-	return c.Render()
+	return c.Render(Conversations, TotalUnread)
 }
 
 func getUnreadMsgCount(userID string, conver conversation.Conversation) int {
@@ -795,15 +797,15 @@ func (c User) GetUnreadMessages(conversationID string) revel.Result {
 			}
 
 			if len(messages) > 0 {
-				c.RenderArgs["Messages"] = messages
+				Messages := messages
 				conversation.ClearMessageStatus(conversationID)
-				return c.Render()
+				return c.Render(Messages)
 			}
 		}
 		time.Sleep(1 * time.Second)
 	}
 
-	c.RenderArgs["Messages"] = messages
+	Messages := messages
 	conversation.ClearMessageStatus(conversationID)
-	return c.Render()
+	return c.Render(Messages)
 }

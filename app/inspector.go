@@ -15,10 +15,14 @@ func check(c *revel.Controller) revel.Result {
 	if c.Session["UserID"] != "" && c.Session["NickName"] != "" &&
 		c.Session["Role"] != "" && c.Session["UserID"] != dbmgr.Guest {
 
-		c.RenderArgs["UserID"] = c.Session["UserID"]
-		c.RenderArgs["NickName"] = c.Session["NickName"]
-		c.RenderArgs["Avatar"] = c.Session["Avatar"]
-		c.RenderArgs["Role"] = c.Session["Role"]
+		UserID := c.Session["UserID"]
+		NickName := c.Session["NickName"]
+		Avatar := c.Session["Avatar"]
+		Role := c.Session["Role"]
+		c.ViewArgs["UserID"] = UserID
+		c.ViewArgs["NickName"] = NickName
+		c.ViewArgs["Avatar"] = Avatar
+		c.ViewArgs["Role"] = Role
 
 		if c.Action == "Admin.Home" {
 			i, err := strconv.Atoi(c.Session["Role"])
@@ -37,7 +41,8 @@ func check(c *revel.Controller) revel.Result {
 
 		count := controllers.GetUnreadMsgCount(c.Session["UserID"])
 		if count > 0 {
-			c.RenderArgs["UnreadMsgCount"] = count
+			UnreadMsgCount := count
+			c.ViewArgs["UnreadMsgCount"] = UnreadMsgCount
 		}
 		log.Println("用户 " + c.Session["NickName"] + " 访问 " + c.Action)
 		return nil
@@ -46,7 +51,8 @@ func check(c *revel.Controller) revel.Result {
 	if c.Session["UserID"] == dbmgr.Guest && (c.Action == "User.Watch" ||
 		c.Action == "User.Collect" || c.Action == "User.ConversationWith") {
 		log.Println("游客访问 " + c.Action)
-		c.RenderArgs["SigninedUserID"] = dbmgr.Guest
+		SigninedUserID := dbmgr.Guest
+		c.ViewArgs["SigninedUserID"] = SigninedUserID
 		return c.Redirect(controllers.User.SignIn)
 	}
 
@@ -57,12 +63,16 @@ func check(c *revel.Controller) revel.Result {
 		c.Action == "App.Articles" || c.Action == "App.Pictures" ||
 		c.Action == "App.About" {
 
-		c.RenderArgs["UserID"] = dbmgr.Guest
-		c.RenderArgs["NickName"] = dbmgr.Guest
-		c.RenderArgs["Avatar"] = dbmgr.Guest
-		c.Session["UserID"] = dbmgr.Guest
-		c.Session["NickName"] = dbmgr.Guest
-		c.Session["Avatar"] = dbmgr.Guest
+		UserID := dbmgr.Guest
+		NickName := dbmgr.Guest
+		Avatar := dbmgr.Guest
+		c.Session["UserID"] = UserID
+		c.Session["NickName"] = NickName
+		c.Session["Avatar"] = Avatar
+
+		c.ViewArgs["UserID"] = UserID
+		c.ViewArgs["NickName"] = NickName
+		c.ViewArgs["Avatar"] = Avatar
 
 		log.Println("游客访问 " + c.Action)
 		return nil

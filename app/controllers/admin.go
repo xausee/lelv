@@ -51,10 +51,9 @@ func (c Admin) SearchForCarousel(key string) revel.Result {
 	if err != nil {
 		log.Println(err)
 	}
+	Blogs:= bs
 
-	c.RenderArgs["Blogs"] = bs
-
-	return c.Render()
+	return c.Render(Blogs)
 }
 
 // SearchForModule 站内搜索功能
@@ -64,9 +63,9 @@ func (c Admin) SearchForModule(key string) revel.Result {
 		log.Println(err)
 	}
 
-	c.RenderArgs["Blogs"] = bs
+	Blogs:= bs
 
-	return c.Render()
+	return c.Render(Blogs)
 }
 
 // Carousel 编辑轮播博客页面
@@ -115,10 +114,10 @@ func (c Admin) PostCarouselBlog() revel.Result {
 
 // EditHomeBlog 编辑要在首页显示的博客
 func (c Admin) EditHomeBlog(t admin.BlogType, title string) revel.Result {
-	c.RenderArgs["BlogType"] = t
-	c.RenderArgs["Title"] = title
+	BlogType:= t
+	Title:= title
 
-	return c.Render()
+	return c.Render(BlogType,Title)
 }
 
 // PostEditHomeBlog 编辑要在首页显示的博客
